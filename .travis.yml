@@ -1,7 +1,6 @@
 sudo: false
 
 language: cpp
-compiler: gcc
 
 branches:
   only:
