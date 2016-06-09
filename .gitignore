@@ -1,0 +1,21 @@
+# Compiled Object files
+*.slo
+*.lo
+*.o
+
+# Compiled Dynamic libraries
+*.so
+*.dylib
+
+# Compiled Static libraries
+*.lai
+*.la
+*.a
+
+/.vagrant
+/_build/
+/_build32/
+/_build64/
+/build/
+/build32/
+/build64/

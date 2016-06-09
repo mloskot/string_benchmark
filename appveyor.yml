@@ -1,0 +1,37 @@
+version: 1.0.{build}
+
+os: Visual Studio 2015
+
+platform: x64
+
+configuration: Release
+
+branches:
+  only:
+    - master
+
+platform:
+  - x86
+  - x64
+
+configuration:
+  - Release
+
+matrix:
+  fast_finish: true
+
+before_build:
+  - ps: |
+      if ($env:PLATFORM -Match "x86") {
+        $G="Visual Studio 14 2015"
+      } elseif ($env:PLATFORM -Match "x64") {
+        $G="Visual Studio 14 2015 Win64"
+      }
+      Write-Host "Running CMake:" -ForegroundColor Magenta
+      cmake.exe -G $G -DCMAKE_BUILD_TYPE:STRING=Release $env:APPVEYOR_BUILD_FOLDER
+      Write-Host "Running MSBuild:" -ForegroundColor Magenta
+  - ps:
+
+build:
+  project: string-benchmark.sln
+  verbosity: minimal
