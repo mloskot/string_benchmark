@@ -84,14 +84,14 @@ inline std::wstring wstring_sprintf(wchar_t const* fmt, ...)
 
 }
 
-BENCHMARK(narrow_string, sprintf, 10, 1000)
+BENCHMARK(narrow_string, sprintf, 100, 10000)
 {
     std::string result;
     for (auto const& s : string_benchmark::nstring_samples)
         result = string_benchmark::nstring_sprintf("head/%s/foot", s);
 }
 
-BENCHMARK(wide_string, sprintf, 10, 1000)
+BENCHMARK(wide_string, sprintf, 100, 10000)
 {
     std::wstring result;
     for (auto const& s : string_benchmark::wstring_samples)
