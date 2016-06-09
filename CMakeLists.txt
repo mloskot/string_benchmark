@@ -19,7 +19,7 @@ ExternalProject_Add(
     GIT_REPOSITORY https://github.com/nickbruun/hayai.git
     GIT_TAG master
     TIMEOUT 10
-    UPDATE_COMMAND ${GIT_EXECUTABLE} pull --depth=1
+    UPDATE_COMMAND ${GIT_EXECUTABLE} pull
     CONFIGURE_COMMAND ""
     BUILD_COMMAND ""
     INSTALL_COMMAND ""
