@@ -41,7 +41,7 @@ script:
      export CFLAGS=${ARCH} &&
      export CXXFLAGS=${ARCH} &&
      cmake -DCMAKE_BUILD_TYPE=Release .. &&
-     make
+     make VERBOSE=1
 
 notifications:
   email:
