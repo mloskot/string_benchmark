@@ -34,13 +34,13 @@ matrix:
             - g++-5
 script:
   - >
-     mkdir -p build
-     cd build
-     export CC=${MYCC}
-     export CXX=${MYCXX}
-     export CFLAGS=${ARCH}
-     export CXXFLAGS=${ARCH}
-     cmake -DCMAKE_BUILD_TYPE=Release ..
+     mkdir -p build &&
+     cd build &&
+     export CC=${MYCC} &&
+     export CXX=${MYCXX} &&
+     export CFLAGS=${ARCH} &&
+     export CXXFLAGS=${ARCH} **
+     cmake -DCMAKE_BUILD_TYPE=Release .. &&
      make
 
 notifications:
