@@ -23,7 +23,7 @@ matrix:
             - *apt-common
             - g++-5
             - g++-5-multilib
-            - libc6-dbg:i386
+            - gcc-5-multilib
     - env: MYCC=gcc-5 MYCXX=g++-5 ARCH=-m64
       compiler: gcc
       addons:
@@ -33,14 +33,15 @@ matrix:
             - *apt-common
             - g++-5
 script:
-  - mkdir -p build
-  - cd build
-  - export CC=${MYCC}
-  - export CXX=${MYCXX}
-  - export CFLAGS=${ARCH}
-  - export CXXFLAGS=${ARCH}
-  - cmake -DCMAKE_BUILD_TYPE=Release ..
-  - make
+  - >
+     mkdir -p build
+     cd build
+     export CC=${MYCC}
+     export CXX=${MYCXX}
+     export CFLAGS=${ARCH}
+     export CXXFLAGS=${ARCH}
+     cmake -DCMAKE_BUILD_TYPE=Release ..
+     make
 
 notifications:
   email:
