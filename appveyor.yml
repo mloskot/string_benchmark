@@ -2,20 +2,16 @@ version: 1.0.{build}
 
 os: Visual Studio 2015
 
-platform: x64
-
-configuration: Release
-
-branches:
-  only:
-    - master
-
 platform:
   - x86
   - x64
 
 configuration:
   - Release
+
+branches:
+  only:
+    - master
 
 matrix:
   fast_finish: true
