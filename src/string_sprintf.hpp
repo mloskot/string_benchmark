@@ -4,7 +4,7 @@
 #include <cstdarg>
 #include <cstdio>
 #include <string>
-#include "samples.hpp"
+#include "benchmark.hpp"
 
 namespace string_benchmark
 {
@@ -84,16 +84,30 @@ inline std::wstring wstring_sprintf(wchar_t const* fmt, ...)
 
 }
 
-BENCHMARK(narrow_string, sprintf, 100, 10000)
+STRING_BENCHMARK(narrow_string, sprintf)
 {
     std::string result;
     for (auto const& s : string_benchmark::nstring_samples)
-        result = string_benchmark::nstring_sprintf("head/%s/foot", s);
+    {
+        result = string_benchmark::nstring_sprintf("1234/%s/7890", s);
+
+#ifdef STRING_BENCHMARK_ENABLE_TESTS
+        auto const new_size = result.size();
+        assert(new_size == std::strlen(s) + 10);
+#endif
+    }
 }
 
-BENCHMARK(wide_string, sprintf, 100, 10000)
+STRING_BENCHMARK(wide_string, sprintf)
 {
     std::wstring result;
     for (auto const& s : string_benchmark::wstring_samples)
-        result = string_benchmark::wstring_sprintf(L"head/%s/foot", s);
+    {
+        result = string_benchmark::wstring_sprintf(L"1234/%s/7890", s);
+
+#ifdef STRING_BENCHMARK_ENABLE_TESTS
+        auto const new_size = result.size();
+        assert(new_size == std::wcslen(s) + 10);
+#endif
+    }
 }
