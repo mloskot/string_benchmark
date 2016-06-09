@@ -39,7 +39,7 @@ script:
      export CC=${MYCC} &&
      export CXX=${MYCXX} &&
      export CFLAGS=${ARCH} &&
-     export CXXFLAGS=${ARCH} **
+     export CXXFLAGS=${ARCH} &&
      cmake -DCMAKE_BUILD_TYPE=Release .. &&
      make
 
