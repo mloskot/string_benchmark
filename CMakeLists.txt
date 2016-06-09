@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 2.8)
-project(string-benchmark)
+project(string_benchmark)
 
 if(NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE "Release" CACHE STRING
@@ -54,7 +54,7 @@ endfunction()
 
 # List all non-source code files (documents, configuration files, etc.)
 set(other_files .gitignore .travis.yml appveyor.yml README.md)
-# Collect all existing files and configure as non-sources. 
+# Collect all existing files and configure as non-sources.
 collect_info_files(${other_files})
 # Create dummy target/project for an IDE with documents attached
 add_custom_target(docs SOURCES ${INFO_FILES})

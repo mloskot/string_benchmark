@@ -29,7 +29,7 @@ before_build:
   - ps:
 
 build:
-  project: string-benchmark.sln
+  project: string_benchmark.sln
   verbosity: minimal
 
 notifications:
