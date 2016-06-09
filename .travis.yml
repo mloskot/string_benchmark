@@ -21,8 +21,8 @@ matrix:
             - ubuntu-toolchain-r-test
           packages:
             - *apt-common
-            - g++-5-multilib
             - g++-5
+            - g++-5-multilib
     - env: ARCH=-m64
       compiler: gcc
       addons:
@@ -32,10 +32,13 @@ matrix:
             - *apt-common
             - g++-5
 script:
-  - mkdir -p build && cd build
-  - if [ "$CXX" = "gcc" ]; then export CXX="g++-5" CC="gcc-5"; fi
+  - mkdir -p build
+  - cd build
+  - if [ "$CXX" = "gcc" ]; then export CXX="/usr/bin/g++-5" CC="/usr/bin/gcc-5"; fi
   - if [ "$CXX" = "clang" ]; then export CXX="clang++-3.7" CC="clang-3.7"; fi
   - export CFLAGS="${ARCH}" CXXFLAGS="${ARCH}"
+  - echo "CC=${CC}"
+  - echo "CXX=${CXX}"
   - cmake -DCMAKE_BUILD_TYPE=Release ..
   - make
 
