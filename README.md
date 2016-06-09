@@ -9,6 +9,24 @@ C strings, character arrays, `std::string` and `std::wstring` classes.
 |:--- |:--- |:--- |:--- |
 | `master` | [![status](https://travis-ci.org/mloskot/string_benchmark.svg?branch=master)](https://travis-ci.org/mloskot/string_benchmark) | [![status](https://ci.appveyor.com/api/projects/status/9xx7o8wjh35m21mn/branch/master?svg=true)](https://ci.appveyor.com/project/mloskot/string-benchmark/branch/master) | [![status](https://drone.io/github.com/mloskot/string_benchmark/status.png)](https://drone.io/github.com/mloskot/string_benchmark/latest) |
 
+## Usage
+
+Build and run the benchmark with: 
+
+### Unix
+
+```
+cmake -DCMAKE_BUILD_TYPE=Release /path/to/string_benchmark
+make
+```
+
+### Windows
+
+```
+cmake -G "Visual Studio 2015" /path/to/string_benchmark
+msbuild /p:Configuration=Release /p:Platform=Win32 string-benchmark.sln
+```
+
 ## Credits
 
 * Nick Bruun for [Hayai](https://github.com/nickbruun/hayai)
