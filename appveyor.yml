@@ -31,3 +31,11 @@ before_build:
 build:
   project: string-benchmark.sln
   verbosity: minimal
+
+notifications:
+- provider: Email
+  to:
+  - mateusz@loskot.net
+  on_build_success: false
+  on_build_failure: true
+  on_build_status_changed: true
