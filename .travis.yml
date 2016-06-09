@@ -20,7 +20,7 @@ matrix:
             - ubuntu-toolchain-r-test
           packages:
             - *apt-common
-            - g++5-multilib
+            - g++-5-multilib
             - g++-5
     - compiler: "g++-5 -m64"
       addons:
