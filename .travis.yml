@@ -13,7 +13,7 @@ addons:
 
 matrix:
   include:
-    - env: CCOMPILER=gcc-5 CXXCOMPILER=g++-5 ARCH=-m32
+    - env: MYCC=gcc-5 MYCXX=g++-5 ARCH=-m32
       compiler: gcc
       addons:
         apt:
@@ -23,8 +23,8 @@ matrix:
             - *apt-common
             - g++-5
             - g++-5-multilib
-            - libc6-i386
-    - env: CCOMPILER=gcc-5 CXXCOMPILER=g++-5 ARCH=-m64
+            - libc6-dbg:i386
+    - env: MYCC=gcc-5 MYCXX=g++-5 ARCH=-m64
       compiler: gcc
       addons:
         apt:
@@ -35,8 +35,8 @@ matrix:
 script:
   - mkdir -p build
   - cd build
-  - export CC=${CCOMPILER}
-  - export CXX=${CXXCOMPILER}
+  - export CC=${MYCC}
+  - export CXX=${MYCXX}
   - export CFLAGS=${ARCH}
   - export CXXFLAGS=${ARCH}
   - cmake -DCMAKE_BUILD_TYPE=Release ..
