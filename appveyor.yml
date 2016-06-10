@@ -26,7 +26,6 @@ before_build:
       Write-Host "Running CMake:" -ForegroundColor Magenta
       cmake.exe -G $G -DCMAKE_BUILD_TYPE:STRING=Release $env:APPVEYOR_BUILD_FOLDER
       Write-Host "Running MSBuild:" -ForegroundColor Magenta
-  - ps:
 
 build:
   project: string_benchmark.sln
