@@ -3,6 +3,7 @@
 #include <cassert>
 #include <cstdarg>
 #include <cstdio>
+#include <cstring>
 #include <string>
 
 using n10strings = std::array<char const*, 10>;
