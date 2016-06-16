@@ -12,7 +12,7 @@ using w10strings = std::array<wchar_t const*, 10>;
 extern n10strings n10string_samples;
 extern w10strings w10string_samples;
 
-template <typename Char, template<typename> typename Fixture>
+template <typename Char, template<typename> class Fixture>
 struct base_fixture
 {
     using string = std::basic_string<Char, std::char_traits<Char>>;
