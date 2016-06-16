@@ -1,6 +1,5 @@
 #pragma once
 #include <hayai.hpp>
-#include <string>
 #include "benchmark.hpp"
 #include "fixture.hpp"
 

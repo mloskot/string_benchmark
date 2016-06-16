@@ -1,6 +1,9 @@
 #pragma once
 #include <array>
 #include <cassert>
+#include <cstdarg>
+#include <cstdio>
+#include <string>
 
 using n10strings = std::array<char const*, 10>;
 using w10strings = std::array<wchar_t const*, 10>;

@@ -1,9 +1,5 @@
 #pragma once
 #include <hayai.hpp>
-#include <cassert>
-#include <cstdarg>
-#include <cstdio>
-#include <string>
 #include "benchmark.hpp"
 #include "fixture.hpp"
 
