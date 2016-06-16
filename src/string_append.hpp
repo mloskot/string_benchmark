@@ -2,43 +2,83 @@
 #include <hayai.hpp>
 #include <string>
 #include "benchmark.hpp"
+#include "fixture.hpp"
 
-STRING_BENCHMARK(narrow_string, append)
+template <typename Char>
+struct test_append
 {
-    std::string result;
+    using fixture = fixture<Char>;
 
-#ifdef STRING_BENCHMARK_ENABLE_TESTS
-    std::size_t test_size = result.size();
-#endif
-
-    for (auto const& s : string_benchmark::nstring_samples)
+    static void append(Char const* const s)
     {
+        fixture::string result;
         result.append(s);
 
 #ifdef STRING_BENCHMARK_ENABLE_TESTS
         auto const new_size = result.size();
-        assert(new_size == test_size + std::strlen(s));
-        test_size = new_size;
+        assert(new_size == fixture::strlen(s));
 #endif
     }
+
+    static void single_chars10()
+    {
+        auto const& s = fixture::samples().front();
+        append(s);
+    }
+
+    static void single_chars100()
+    {
+        auto const& s = fixture::samples().back();
+        append(s);
+    }
+
+    static void multiple()
+    {
+        fixture::string result;
+
+#ifdef STRING_BENCHMARK_ENABLE_TESTS
+        std::size_t test_size = result.size();
+#endif
+        auto const& samples = fixture::samples();
+        for (auto const& s : samples)
+        {
+            result.append(s);
+
+#ifdef STRING_BENCHMARK_ENABLE_TESTS
+            auto const new_size = result.size();
+            assert(new_size == test_size + fixture::strlen(s));
+            test_size = new_size;
+#endif
+        }
+    }
+};
+
+STRING_BENCHMARK(string, append_single_chars10)
+{
+    test_append<char>::single_chars10();
 }
 
-STRING_BENCHMARK(wide_string, append)
+STRING_BENCHMARK(string, append_single_chars100)
 {
-    std::wstring result;
+    test_append<char>::single_chars100();
+}
 
-#ifdef STRING_BENCHMARK_ENABLE_TESTS
-    std::size_t test_size = result.size();
-#endif
+STRING_BENCHMARK(string, append_multiple)
+{
+    test_append<char>::multiple();
+}
 
-    for (auto const& s : string_benchmark::wstring_samples)
-    {
-        result.append(s);
+STRING_BENCHMARK(wstring, append_single_chars10)
+{
+    test_append<wchar_t>::single_chars10();
+}
 
-#ifdef STRING_BENCHMARK_ENABLE_TESTS
-        auto const new_size = result.size();
-        assert(new_size == test_size + std::wcslen(s));
-        test_size = new_size;
-#endif
-    }
+STRING_BENCHMARK(wstring, append_single_chars100)
+{
+    test_append<wchar_t>::single_chars10();
+}
+
+STRING_BENCHMARK(wstring, append_multiple)
+{
+    test_append<wchar_t>::multiple();
 }

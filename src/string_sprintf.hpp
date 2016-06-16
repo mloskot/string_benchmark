@@ -5,109 +5,92 @@
 #include <cstdio>
 #include <string>
 #include "benchmark.hpp"
+#include "fixture.hpp"
 
-namespace string_benchmark
+template <typename Char>
+struct test_sprintf
 {
+    using fixture = fixture<Char>;
 
-// On Windows, prefer Microsoft-specific string I/O functions
-// assuming they are best optimised for this platform.
-
-inline void nstring_sprintf_v(std::string& dst, char const* fmt, va_list args)
-{
-#ifdef _MSC_VER
-    auto const ni=_vscprintf(fmt, args);
-#else
-    auto const ni = std::vsnprintf(nullptr, 0, fmt, args);
-#endif
-    if (ni > 0)
+    static void sprintf(Char const* const s)
     {
-        auto const pos = dst.size();
-        auto const add = static_cast<size_t>(ni);
-        dst.resize(pos + add);
-#ifdef _MSC_VER
-        auto const no = vsprintf_s(&dst[pos], add + 1, fmt, args);
-#else
-        auto const no = vsnprintf(&dst[pos], add + 1, fmt, args);
-#endif
-        if (no != ni)
-        {
-            assert(0);
-            dst.resize(pos);
-        }
-    }
-}
-
-inline void wstring_sprintf_v(std::wstring& dst, wchar_t const* fmt, va_list args)
-{
-#ifdef _MSC_VER
-    auto const ni=_vscwprintf(fmt, args);
-#else
-    auto const ni = std::vswprintf(nullptr, 0, fmt, args);
-#endif
-    if (ni > 0)
-    {
-        auto const pos = dst.size();
-        auto const add = static_cast<size_t>(ni);
-        dst.resize(pos + add);
-#ifdef _MSC_VER
-        auto const no = vswprintf_s(&dst[pos], add + 1, fmt, args);
-#else
-        auto const no = vswprintf(&dst[pos], add + 1, fmt, args);
-#endif
-        if (no != ni)
-        {
-            assert(0);
-            dst.resize(pos);
-        }
-    }
-}
-
-inline std::string nstring_sprintf(char const* fmt, ...)
-{
-    std::string dst;
-    va_list args;
-    va_start(args, fmt);
-    nstring_sprintf_v(dst, fmt, args);
-    va_end(args);
-    return dst;
-}
-
-inline std::wstring wstring_sprintf(wchar_t const* fmt, ...)
-{
-    std::wstring dst;
-    va_list args;
-    va_start(args, fmt);
-    wstring_sprintf_v(dst, fmt, args);
-    va_end(args);
-    return dst;
-}
-
-}
-
-STRING_BENCHMARK(narrow_string, sprintf)
-{
-    std::string result;
-    for (auto const& s : string_benchmark::nstring_samples)
-    {
-        result = string_benchmark::nstring_sprintf("1234/%s/7890", s);
+        fixture::string result;
+        result = fixture::sprintf(fixture::formatter_s(), s);
 
 #ifdef STRING_BENCHMARK_ENABLE_TESTS
         auto const new_size = result.size();
-        assert(new_size == std::strlen(s) + 10);
+        assert(new_size == fixture::strlen(s));
 #endif
     }
-}
 
-STRING_BENCHMARK(wide_string, sprintf)
-{
-    std::wstring result;
-    for (auto const& s : string_benchmark::wstring_samples)
+    static void single_chars10()
     {
-        result = string_benchmark::wstring_sprintf(L"1234/%s/7890", s);
+        auto const& s = fixture::samples().front();
+        sprintf(s);
+    }
+
+    static void single_chars100()
+    {
+        auto const& s = fixture::samples().back();
+        sprintf(s);
+    }
+
+    static void multiple()
+    {
+        fixture::string result;
 
 #ifdef STRING_BENCHMARK_ENABLE_TESTS
-        auto const new_size = result.size();
-        assert(new_size == std::wcslen(s) + 10);
+        std::size_t test_size = result.size();
+#endif
+
+        auto const& samples = fixture::samples();
+        auto const& s1 = samples[0];
+        auto const& s2 = samples[1];
+        auto const& s3 = samples[2];
+        auto const& s4 = samples[3];
+        auto const& s5 = samples[4];
+        auto const& s6 = samples[5];
+        auto const& s7 = samples[6];
+        auto const& s8 = samples[7];
+        auto const& s9 = samples[8];
+        auto const& s10 = samples[9];
+
+        result = fixture::sprintf(fixture::formatter_s10(), s1, s2, s3, s4, s5, s6, s7, s8, s9, s10);
+
+#ifdef STRING_BENCHMARK_ENABLE_TESTS
+        for (auto const& s : samples)
+            test_size += fixture::strlen(s) + 1;
+        assert(result.size() == test_size);
 #endif
     }
+};
+
+STRING_BENCHMARK(string, sprintf_single_chars10)
+{
+    test_sprintf<char>::single_chars10();
 }
+
+STRING_BENCHMARK(string, sprintf_single_chars100)
+{
+    test_sprintf<char>::single_chars100();
+}
+
+STRING_BENCHMARK(string, sprintf_multiple)
+{
+    test_sprintf<char>::multiple();
+}
+
+STRING_BENCHMARK(wstring, sprintf_single_chars10)
+{
+    test_sprintf<wchar_t>::single_chars10();
+}
+
+STRING_BENCHMARK(wstring, sprintf_single_chars100)
+{
+    test_sprintf<wchar_t>::single_chars100();
+}
+
+//STRING_BENCHMARK(wstring, sprintf_multiple)
+//{
+//    test_sprintf<wchar_t>::multiple();
+//}

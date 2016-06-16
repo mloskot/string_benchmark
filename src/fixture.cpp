@@ -1,9 +1,6 @@
-#include "samples.hpp"
+#include "fixture.hpp"
 
-namespace string_benchmark
-{
-
-std::array<char const*, 10> nstring_samples = {
+n10strings n10string_samples = {
     "something1",
     "something1something2",
     "something1something2something3",
@@ -16,7 +13,7 @@ std::array<char const*, 10> nstring_samples = {
     "something1something2something3something4something5something6something7something8something9something10",
 };
 
-std::array<wchar_t const*, 10> wstring_samples = {
+w10strings w10string_samples = {
     L"something1",
     L"something1something2",
     L"something1something2something3",
@@ -28,5 +25,3 @@ std::array<wchar_t const*, 10> wstring_samples = {
     L"something1something2something3something4something5something6something7something8something9",
     L"something1something2something3something4something5something6something7something8something9something10",
 };
-
-}

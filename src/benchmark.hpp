@@ -1,5 +1,4 @@
 #pragma once
-#include "samples.hpp"
 
 //#define STRING_BENCHMARK_ENABLE_TESTS
 #ifndef NDEBUG
@@ -10,15 +9,14 @@
 #include <cassert>
 #endif
 
-
-namespace string_benchmark
+namespace config
 {
 #ifdef NDEBUG
-enum { runs = 100, iterations = 10000 };
+enum { runs = 1000, iterations = 1000 };
 #else
 enum { runs = 1, iterations = 1 };
 #endif
 }
 
 #define STRING_BENCHMARK(fixture_name, benchmark_name) \
-    BENCHMARK(fixture_name, benchmark_name, (string_benchmark::runs), (string_benchmark::iterations))
+    BENCHMARK(fixture_name, benchmark_name, (config::runs), (config::iterations))
