@@ -6,40 +6,40 @@
 template <typename Char>
 struct test_sprintf
 {
-    using fixture = fixture<Char>;
+    using f = fixture<Char>;
 
     static void sprintf(Char const* const s)
     {
-        fixture::string result;
-        result = fixture::sprintf(fixture::formatter_s(), s);
+        f::string result;
+        result = f::sprintf(f::formatter_s(), s);
 
 #ifdef STRING_BENCHMARK_ENABLE_TESTS
         auto const new_size = result.size();
-        assert(new_size == fixture::strlen(s));
+        assert(new_size == f::strlen(s));
 #endif
     }
 
     static void single_chars10()
     {
-        auto const& s = fixture::samples().front();
+        auto const& s = f::samples().front();
         sprintf(s);
     }
 
     static void single_chars100()
     {
-        auto const& s = fixture::samples().back();
+        auto const& s = f::samples().back();
         sprintf(s);
     }
 
     static void multiple()
     {
-        fixture::string result;
+        f::string result;
 
 #ifdef STRING_BENCHMARK_ENABLE_TESTS
         std::size_t test_size = result.size();
 #endif
 
-        auto const& samples = fixture::samples();
+        auto const& samples = f::samples();
         auto const& s1 = samples[0];
         auto const& s2 = samples[1];
         auto const& s3 = samples[2];
@@ -51,11 +51,11 @@ struct test_sprintf
         auto const& s9 = samples[8];
         auto const& s10 = samples[9];
 
-        result = fixture::sprintf(fixture::formatter_s10(), s1, s2, s3, s4, s5, s6, s7, s8, s9, s10);
+        result = f::sprintf(f::formatter_s10(), s1, s2, s3, s4, s5, s6, s7, s8, s9, s10);
 
 #ifdef STRING_BENCHMARK_ENABLE_TESTS
         for (auto const& s : samples)
-            test_size += fixture::strlen(s) + 1;
+            test_size += f::strlen(s) + 1;
         assert(result.size() == test_size);
 #endif
     }

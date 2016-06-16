@@ -6,46 +6,46 @@
 template <typename Char>
 struct test_append
 {
-    using fixture = fixture<Char>;
+    using f = fixture<Char>;
 
     static void append(Char const* const s)
     {
-        fixture::string result;
+        f::string result;
         result.append(s);
 
 #ifdef STRING_BENCHMARK_ENABLE_TESTS
         auto const new_size = result.size();
-        assert(new_size == fixture::strlen(s));
+        assert(new_size == f::strlen(s));
 #endif
     }
 
     static void single_chars10()
     {
-        auto const& s = fixture::samples().front();
+        auto const& s = f::samples().front();
         append(s);
     }
 
     static void single_chars100()
     {
-        auto const& s = fixture::samples().back();
+        auto const& s = f::samples().back();
         append(s);
     }
 
     static void multiple()
     {
-        fixture::string result;
+        f::string result;
 
 #ifdef STRING_BENCHMARK_ENABLE_TESTS
         std::size_t test_size = result.size();
 #endif
-        auto const& samples = fixture::samples();
+        auto const& samples = f::samples();
         for (auto const& s : samples)
         {
             result.append(s);
 
 #ifdef STRING_BENCHMARK_ENABLE_TESTS
             auto const new_size = result.size();
-            assert(new_size == test_size + fixture::strlen(s));
+            assert(new_size == test_size + f::strlen(s));
             test_size = new_size;
 #endif
         }
