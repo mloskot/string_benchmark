@@ -94,7 +94,7 @@ struct fixture<char> : public base_fixture<char, fixture>
         return "/%s/%s/%s/%s/%s/%s/%s/%s/%s/%s";
     }
 
-    static std::size_t vscprintf(char const* format, va_list args) PRINTF_FORMAT(1, 0)
+    static int vscprintf(char const* format, va_list args) PRINTF_FORMAT(1, 0)
     {
 #ifdef STRING_BENCHMARK_ENABLE_STD_SPRINTF
         auto const n = std::vsnprintf(nullptr, 0, format, args);
@@ -104,7 +104,7 @@ struct fixture<char> : public base_fixture<char, fixture>
         return n;
     }
 
-    static std::size_t vsnprintf(char* buffer, std::size_t buffer_size, char const* format, va_list args) PRINTF_FORMAT(3, 0)
+    static int vsnprintf(char* buffer, std::size_t buffer_size, char const* format, va_list args) PRINTF_FORMAT(3, 0)
     {
 #ifdef STRING_BENCHMARK_ENABLE_STD_SPRINTF
         auto const n = std::vsnprintf(buffer, buffer_size, format, args);
@@ -138,7 +138,7 @@ struct fixture<wchar_t> : public base_fixture<wchar_t, fixture>
         return L"/%s/%s/%s/%s/%s/%s/%s/%s/%s/%s";
     }
 
-    static std::size_t vscprintf(wchar_t const* format, va_list args)
+    static int vscprintf(wchar_t const* format, va_list args)
     {
 #ifdef STRING_BENCHMARK_ENABLE_STD_SPRINTF
         auto const n = std::vswprintf(nullptr, 0, format, args);
@@ -148,7 +148,7 @@ struct fixture<wchar_t> : public base_fixture<wchar_t, fixture>
         return n;
     }
 
-    static std::size_t vsnprintf(wchar_t* buffer, std::size_t buffer_size, wchar_t const* format, va_list args)
+    static int vsnprintf(wchar_t* buffer, std::size_t buffer_size, wchar_t const* format, va_list args)
     {
 #ifdef STRING_BENCHMARK_ENABLE_STD_SPRINTF
         auto const n = std::vswprintf(buffer, buffer_size, format, args);
