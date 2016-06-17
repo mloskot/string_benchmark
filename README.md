@@ -9,6 +9,33 @@ C strings, character arrays, `std::string` and `std::wstring` classes.
 |:--- |:--- |:--- |:--- |
 | `master` | [![status](https://travis-ci.org/mloskot/string_benchmark.svg?branch=master)](https://travis-ci.org/mloskot/string_benchmark) | [![status](https://ci.appveyor.com/api/projects/status/w07moe4jimo6cqp1/branch/master?svg=true)](https://ci.appveyor.com/project/mloskot/string-benchmark/branch/master) | [![status](https://drone.io/github.com/mloskot/string_benchmark/status.png)](https://drone.io/github.com/mloskot/string_benchmark/latest) |
 
+## Results
+
+### `std::string::append` vs `sprintf`
+
+* `append` single is **single call** to the method.
+* `append` multiple is **repeated call** (x10) to the method in `for` loop
+* `sprintf` single is a **single call** to the function with `%s` formatter.
+* `sprintf` multiple is a **single call** to the function with  `/%s/%s/%s/%s/%s/%s/%s/%s/%s/%s` formatter.
+
+| Benchmark | Average (us) | Fastest (us) | Slowest (us) |
+|:--- |:--- |:--- |:--- |
+| string.append_single_chars10 | 24.494 | 20.134 | 47.801 |
+| string.sprintf_single_chars10 | 263.820 | 257.984 | 367.315 |
+| wstring.append_single_chars10 | 106.396 | 95.996 | 169.181 |
+| wstring.sprintf_single_chars10 | 355.817 | 344.556 | 477.092 |
+|:--- |:--- |:--- |:--- |
+| string.append_single_chars100 | 160.759 | 146.868 | 318.228 |
+| string.sprintf_single_chars100 | 386.864 | 376.240 | 520.378 |
+| wstring.append_single_chars100 | 101.447 | 95.996 | 158.024 |
+| wstring.sprintf_single_chars100 | 372.627 | 365.976 | 475.753 |
+|:--- |:--- |:--- |:--- |
+| string.append_multiple | 1140.287 | 1077.296 | 1966.223 |
+| wstring.append_multiple | 1408.417 | 1378.960 | 3367.890 |
+| string.sprintf_multiple | 1640.404 | 1603.423 | 2152.755 |
+| wstring.sprintf_multiple | 1773.422 | 1714.539 | 2272.796 |
+|:--- |:--- |:--- |:--- |
+
 ## Usage
 
 Build and run the benchmark with: 
