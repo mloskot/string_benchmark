@@ -7,10 +7,11 @@ template <typename Char>
 struct test_append
 {
     using f = fixture<Char>;
+    using string = typename fixture<Char>::string;
 
     static void append(Char const* const s)
     {
-        f::string result;
+        string result;
         result.append(s);
 
 #ifdef STRING_BENCHMARK_ENABLE_TESTS
@@ -33,7 +34,7 @@ struct test_append
 
     static void multiple()
     {
-        f::string result;
+        string result;
 
 #ifdef STRING_BENCHMARK_ENABLE_TESTS
         std::size_t test_size = result.size();
