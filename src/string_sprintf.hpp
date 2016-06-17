@@ -2,6 +2,7 @@
 #include <hayai.hpp>
 #include "benchmark.hpp"
 #include "fixture.hpp"
+#include <iostream>
 
 template <typename Char>
 struct test_sprintf
@@ -87,7 +88,7 @@ STRING_BENCHMARK(wstring, sprintf_single_chars100)
     test_sprintf<wchar_t>::single_chars100();
 }
 
-//STRING_BENCHMARK(wstring, sprintf_multiple)
-//{
-//    test_sprintf<wchar_t>::multiple();
-//}
+STRING_BENCHMARK(wstring, sprintf_multiple)
+{
+    test_sprintf<wchar_t>::multiple();
+}

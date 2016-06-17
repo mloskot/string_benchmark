@@ -4,6 +4,9 @@
 #include <cstdarg>
 #include <cstdio>
 #include <cstring>
+#ifndef _MSC_VER
+#include <vector>
+#endif
 #include <string>
 
 #ifndef STRING_BENCHMARK_ENABLE_STD_SPRINTF
@@ -39,14 +42,18 @@ struct base_fixture
 
     static void sprintf_v(string& dst, Char const* const fmt, va_list args)
     {
+        va_list args2;
+        va_copy(args2, args);
         auto const ni = fixture::vscprintf(fmt, args);
         if (ni > 0)
         {
+
             auto const pos = dst.size();
             auto const add = static_cast<size_t>(ni);
             dst.resize(pos + add);
 
-            auto const no = fixture::vsnprintf(&dst[pos], add + 1, fmt, args);
+            auto const no = fixture::vsnprintf(&dst[pos], add + 1, fmt, args2);
+            va_end(args2);
             if (no != ni)
             {
                 assert(0);
@@ -130,22 +137,33 @@ struct fixture<wchar_t> : public base_fixture<wchar_t, fixture>
 
     static constexpr wchar_t const* const formatter_s()
     {
-        return L"%s";
+        return L"%ls";
     }
 
     static constexpr wchar_t const* const formatter_s10()
     {
-        return L"/%s/%s/%s/%s/%s/%s/%s/%s/%s/%s";
+        return L"/%ls/%ls/%ls/%ls/%ls/%ls/%ls/%ls/%ls/%ls";
     }
 
     static int vscprintf(wchar_t const* format, va_list args)
     {
-#ifdef STRING_BENCHMARK_ENABLE_STD_SPRINTF
-        auto const n = std::vswprintf(nullptr, 0, format, args);
+#ifdef _MSC_VER
+        return _vscwprintf(format, args);
 #else
-        auto const n = _vscwprintf(format, args);
+        int n = 1024 ;
+        while (n < 1024 * 1024)
+        {
+            va_list args1;
+            va_copy(args1, args);
+            std::vector<wchar_t> buffer(n);
+            auto const fmt_n = vswprintf(buffer.data(), buffer.size()+1, format, args1);
+            va_end(args1);
+            if (fmt_n >= 0)
+                return fmt_n;
+            n *= 2;
+        }
+        return -1;
 #endif
-        return n;
     }
 
     static int vsnprintf(wchar_t* buffer, std::size_t buffer_size, wchar_t const* format, va_list args)
