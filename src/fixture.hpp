@@ -18,6 +18,8 @@
 #ifdef _MSC_VER
 #define PRINTF_FORMAT(format_param, dots_param)
 #else
+// FIXME: does not work for wchar_t
+// https://gcc.gnu.org/bugzilla/show_bug.cgi?id=38308
 #define PRINTF_FORMAT(format_param, dots_param) \
 __attribute__((format(printf, format_param, dots_param)))
 #define _Printf_format_string_
@@ -35,7 +37,7 @@ struct base_fixture
     using string = std::basic_string<Char, std::char_traits<Char>>;
     using fixture = Fixture<Char>;
 
-    static void sprintf_v(string& dst, Char const* const fmt, va_list args) PRINTF_FORMAT(2, 0)
+    static void sprintf_v(string& dst, Char const* const fmt, va_list args)
     {
         auto const ni = fixture::vscprintf(fmt, args);
         if (ni > 0)
@@ -53,7 +55,7 @@ struct base_fixture
         }
     }
 
-    static string sprintf(_Printf_format_string_ Char const* const fmt, ...) PRINTF_FORMAT(1, 2)
+    static string sprintf(_Printf_format_string_ Char const* const fmt, ...)
     {
         string dst;
         va_list args;
@@ -136,7 +138,7 @@ struct fixture<wchar_t> : public base_fixture<wchar_t, fixture>
         return L"/%s/%s/%s/%s/%s/%s/%s/%s/%s/%s";
     }
 
-    static std::size_t vscprintf(wchar_t const* format, va_list args) PRINTF_FORMAT(1, 0)
+    static std::size_t vscprintf(wchar_t const* format, va_list args)
     {
 #ifdef STRING_BENCHMARK_ENABLE_STD_SPRINTF
         auto const n = std::vswprintf(nullptr, 0, format, args);
@@ -146,7 +148,7 @@ struct fixture<wchar_t> : public base_fixture<wchar_t, fixture>
         return n;
     }
 
-    static std::size_t vsnprintf(wchar_t* buffer, std::size_t buffer_size, wchar_t const* format, va_list args) PRINTF_FORMAT(3, 0)
+    static std::size_t vsnprintf(wchar_t* buffer, std::size_t buffer_size, wchar_t const* format, va_list args)
     {
 #ifdef STRING_BENCHMARK_ENABLE_STD_SPRINTF
         auto const n = std::vswprintf(buffer, buffer_size, format, args);
