@@ -6,6 +6,23 @@
 #include <cstring>
 #include <string>
 
+#ifndef STRING_BENCHMARK_ENABLE_STD_SPRINTF
+#  define STRING_BENCHMARK_ENABLE_STD_SPRINTF 1
+#endif
+
+// Source: Chromium
+// Tell the compiler a function is using a printf-style format string.
+// |format_param| is the one-based index of the format string parameter;
+// |dots_param| is the one-based index of the "..." parameter.
+// For v*printf functions (which take a va_list), pass 0 for dots_param.
+#ifdef _MSC_VER
+#define PRINTF_FORMAT(format_param, dots_param)
+#else
+#define PRINTF_FORMAT(format_param, dots_param) \
+__attribute__((format(printf, format_param, dots_param)))
+#define _Printf_format_string_
+#endif
+
 using n10strings = std::array<char const*, 10>;
 using w10strings = std::array<wchar_t const*, 10>;
 
@@ -18,7 +35,7 @@ struct base_fixture
     using string = std::basic_string<Char, std::char_traits<Char>>;
     using fixture = Fixture<Char>;
 
-    static void sprintf_v(string& dst, Char const* const fmt, va_list args)
+    static void sprintf_v(string& dst, Char const* const fmt, va_list args) PRINTF_FORMAT(2, 0)
     {
         auto const ni = fixture::vscprintf(fmt, args);
         if (ni > 0)
@@ -36,7 +53,7 @@ struct base_fixture
         }
     }
 
-    static string sprintf(Char const* const fmt, ...)
+    static string sprintf(_Printf_format_string_ Char const* const fmt, ...) PRINTF_FORMAT(1, 2)
     {
         string dst;
         va_list args;
@@ -75,22 +92,22 @@ struct fixture<char> : public base_fixture<char, fixture>
         return "/%s/%s/%s/%s/%s/%s/%s/%s/%s/%s";
     }
 
-    static auto vscprintf(char const* format, va_list args) -> std::size_t
+    static std::size_t vscprintf(char const* format, va_list args) PRINTF_FORMAT(1, 0)
     {
-#ifdef _MSC_VER
-        auto const n = _vscprintf(format, args);
-#else
+#ifdef STRING_BENCHMARK_ENABLE_STD_SPRINTF
         auto const n = std::vsnprintf(nullptr, 0, format, args);
+#else
+        auto const n = _vscprintf(format, args);
 #endif
         return n;
     }
 
-    static auto vsnprintf(char* buffer, std::size_t buffer_size, char const* format, va_list args) -> std::size_t
+    static std::size_t vsnprintf(char* buffer, std::size_t buffer_size, char const* format, va_list args) PRINTF_FORMAT(3, 0)
     {
-#ifdef _MSC_VER
-        auto const n = vsprintf_s(buffer, buffer_size, format, args);
-#else
+#ifdef STRING_BENCHMARK_ENABLE_STD_SPRINTF
         auto const n = std::vsnprintf(buffer, buffer_size, format, args);
+#else
+        auto const n = vsprintf_s(buffer, buffer_size, format, args);
 #endif
         return n;
     }
@@ -119,22 +136,22 @@ struct fixture<wchar_t> : public base_fixture<wchar_t, fixture>
         return L"/%s/%s/%s/%s/%s/%s/%s/%s/%s/%s";
     }
 
-    static auto vscprintf(wchar_t const* format, va_list args) -> std::size_t
+    static std::size_t vscprintf(wchar_t const* format, va_list args) PRINTF_FORMAT(1, 0)
     {
-#ifdef _MSC_VER
-        auto const n = _vscwprintf(format, args);
-#else
+#ifdef STRING_BENCHMARK_ENABLE_STD_SPRINTF
         auto const n = std::vswprintf(nullptr, 0, format, args);
+#else
+        auto const n = _vscwprintf(format, args);
 #endif
         return n;
     }
 
-    static auto vsnprintf(wchar_t* buffer, std::size_t buffer_size, wchar_t const* format, va_list args) -> std::size_t
+    static std::size_t vsnprintf(wchar_t* buffer, std::size_t buffer_size, wchar_t const* format, va_list args) PRINTF_FORMAT(3, 0)
     {
-#ifdef _MSC_VER
-        auto const n = vswprintf_s(buffer, buffer_size, format, args);
-#else
+#ifdef STRING_BENCHMARK_ENABLE_STD_SPRINTF
         auto const n = std::vswprintf(buffer, buffer_size, format, args);
+#else
+        auto const n = vswprintf_s(buffer, buffer_size, format, args);
 #endif
         return n;
     }
