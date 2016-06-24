@@ -35,6 +35,11 @@ C strings, character arrays, `std::string` and `std::wstring` classes.
 | string.sprintf_multiple | 1640.404 | 1603.423 | 2152.755 |
 | wstring.sprintf_multiple | 1773.422 | 1714.539 | 2272.796 |
 |:--- |:--- |:--- |:--- |
+| string.append_multiple_sql_example | 1340.085 | 1306.026 | 1472.923 |
+| string.sprintf_multiple_sql_example | 1347.877 | 1314.505 | 1496.128 |
+| wstring.append_multiple_sql_example | 755.745 | 722.781 | 1285.945 |
+| wstring.sprintf_multiple_sql_example | 1468.084 | 1434.992 | 1550.570 |
+|:--- |:--- |:--- |:--- |
 
 ## Usage
 

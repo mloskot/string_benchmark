@@ -92,3 +92,39 @@ STRING_BENCHMARK(wstring, sprintf_multiple)
 {
     test_sprintf<wchar_t>::multiple();
 }
+
+STRING_BENCHMARK(string, sprintf_multiple_sql_example)
+{
+    auto const* const tb = "this_is_table_name";
+    auto const* const c1 = "col1_name";
+    auto const* const t1 = "INT";
+    auto const* const c2 = "col2_name";
+    auto const* const t2 = "VARCHAR";
+    auto const s2 = 120U;
+
+    std::string r;
+    r = fixture<char>::sprintf("CREATE TABLE %s (%s %s, %s %s(%u));",
+        tb, c1, t1, c2, t2, s2);
+
+#ifdef STRING_BENCHMARK_ENABLE_TESTS
+    assert(r.size() == 72);
+#endif
+}
+
+STRING_BENCHMARK(wstring, sprintf_multiple_sql_example)
+{
+    auto const* const tb = L"this_is_table_name";
+    auto const* const c1 = L"col1_name";
+    auto const* const t1 = L"INT";
+    auto const* const c2 = L"col2_name";
+    auto const* const t2 = L"VARCHAR";
+    auto const s2 = 120U;
+
+    std::wstring r;
+    r = fixture<wchar_t>::sprintf(L"CREATE TABLE %s (%s %s, %s %s(%u));",
+        tb, c1, t1, c2, t2, s2);
+
+#ifdef STRING_BENCHMARK_ENABLE_TESTS
+    assert(r.size() == 72);
+#endif
+}

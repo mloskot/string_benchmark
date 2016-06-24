@@ -82,3 +82,59 @@ STRING_BENCHMARK(wstring, append_multiple)
 {
     test_append<wchar_t>::multiple();
 }
+
+STRING_BENCHMARK(string, append_multiple_sql_example)
+{
+    auto const* const tb = "this_is_table_name";
+    auto const* const c1 = "col1_name";
+    auto const* const t1 = "INT";
+    auto const* const c2 = "col2_name";
+    auto const* const t2 = "VARCHAR";
+    auto const s2 = 120U;
+
+    std::string r("CREATE TABLE ");
+    r += tb;
+    r += " (";
+    r += c1;
+    r += ' ';
+    r += t1;
+    r += ", ";
+    r += c2;
+    r += ' ';
+    r += t2;
+    r += '(';
+    r += std::to_string(s2);
+    r += "));";
+
+#ifdef STRING_BENCHMARK_ENABLE_TESTS
+    assert(r.size() == 72);
+#endif
+}
+
+STRING_BENCHMARK(wstring, append_multiple_sql_example)
+{
+    auto const* const tb = L"this_is_table_name";
+    auto const* const c1 = L"col1_name";
+    auto const* const t1 = L"INT";
+    auto const* const c2 = L"col2_name";
+    auto const* const t2 = L"VARCHAR";
+    auto const s2 = 120U;
+
+    std::wstring r(L"CREATE TABLE ");
+    r += tb;
+    r += L" (";
+    r += c1;
+    r += L' ';
+    r += t1;
+    r += L", ";
+    r += c2;
+    r += L' ';
+    r += t2;
+    r += L'(';
+    r += std::to_wstring(s2);
+    r += L"));";
+
+#ifdef STRING_BENCHMARK_ENABLE_TESTS
+    assert(r.size() == 72);
+#endif
+}
