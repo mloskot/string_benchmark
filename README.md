@@ -64,7 +64,7 @@ Detailed comparison of two 64-bit builds:
 
 ## Usage
 
-Build and run the benchmark with: 
+Build and run the benchmark with:
 
 ### Unix
 
@@ -81,8 +81,6 @@ msbuild /p:Configuration=Release /p:Platform=Win32 string-benchmark.sln
 ```
 
 ## Credits
-
-* Nick Bruun for [Hayai](https://github.com/nickbruun/hayai)
 
 ## Disclaimer
 
