@@ -29,6 +29,10 @@ set(HAYAI_INCLUDE_DIR ${SOURCE_DIR}/src CACHE INTERNAL "Path to Hayai headers")
 message(STATUS "HAYAI_DIR=${HAYAI_DIR}")
 message(STATUS "HAYAI_INCLUDE_DIR=${HAYAI_INCLUDE_DIR}")
 
+find_package(Boost 1.54.0)
+message(STATUS "Boost_FOUND=${Boost_FOUND}")
+message(STATUS "Boost_INCLUDE_DIRS=${Boost_INCLUDE_DIRS}")
+
 add_subdirectory(src)
 
 # collect_info_files function

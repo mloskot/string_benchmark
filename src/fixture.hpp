@@ -10,7 +10,7 @@
 #include <string>
 
 #ifndef STRING_BENCHMARK_ENABLE_STD_SPRINTF
-#  define STRING_BENCHMARK_ENABLE_STD_SPRINTF 1
+#define STRING_BENCHMARK_ENABLE_STD_SPRINTF 1
 #endif
 
 // Source: Chromium
@@ -86,6 +86,15 @@ struct fixture<char> : public base_fixture<char, fixture>
         return n10string_samples;
     }
 
+    static auto strnicmp(char const* const lhs, char const* const rhs, std::size_t count) -> int
+    {
+#ifdef _MSC_VER
+        return _strnicmp(lhs, rhs, count);
+#else
+#error no _strnicmp function
+#endif
+    }
+
     static auto strlen(char const* const s) -> std::size_t
     {
         return std::strlen(s);
@@ -128,6 +137,15 @@ struct fixture<wchar_t> : public base_fixture<wchar_t, fixture>
     static auto samples() -> w10strings const&
     {
         return w10string_samples;
+    }
+
+    static auto strnicmp(wchar_t const* const lhs, wchar_t const* const rhs, std::size_t count) -> int
+    {
+#ifdef _MSC_VER
+        return _wcsnicmp(lhs, rhs, count);
+#else
+#error no _wcsnicmp function
+#endif
     }
 
     static auto strlen(wchar_t const* const s) -> std::size_t
