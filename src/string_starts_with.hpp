@@ -67,22 +67,22 @@ struct test_starts_with
 
 // strnicmp ////////////////////////////////////////////////////////////////////
 
-STRING_BENCHMARK(string, strnicmp_chars10_search10)
+STRING_BENCHMARK(string, istarts_with_strnicmp_chars10_search10)
 {
     test_starts_with<char>::strnicmp_chars10_search10();
 }
 
-STRING_BENCHMARK(string, strnicmp_chars100_search10)
+STRING_BENCHMARK(string, istarts_with_strnicmp_chars100_search10)
 {
     test_starts_with<char>::strnicmp_chars100_search10();
 }
 
-STRING_BENCHMARK(wstring, strnicmp_chars10_search10)
+STRING_BENCHMARK(wstring, istarts_with_strnicmp_chars10_search10)
 {
     test_starts_with<wchar_t>::strnicmp_chars10_search10();
 }
 
-STRING_BENCHMARK(wstring, strnicmp_chars100_search10)
+STRING_BENCHMARK(wstring, istarts_with_strnicmp_chars100_search10)
 {
     test_starts_with<wchar_t>::strnicmp_chars100_search10();
 }
@@ -90,22 +90,22 @@ STRING_BENCHMARK(wstring, strnicmp_chars100_search10)
 // Boost ///////////////////////////////////////////////////////////////////////
 #ifdef HAS_BOOST
 
-STRING_BENCHMARK(string, boost_istarts_with_chars10_search10)
+STRING_BENCHMARK(string, istarts_with_boost_chars10_search10)
 {
     test_starts_with<char>::boost_istarts_with_chars10_search10();
 }
 
-STRING_BENCHMARK(string, boost_istarts_with_chars100_search10)
+STRING_BENCHMARK(string, istarts_with_boost_chars100_search10)
 {
     test_starts_with<char>::boost_istarts_with_chars100_search10();
 }
 
-STRING_BENCHMARK(wstring, boost_istarts_with_chars10_search10)
+STRING_BENCHMARK(wstring, istarts_with_boost_chars10_search10)
 {
     test_starts_with<wchar_t>::boost_istarts_with_chars10_search10();
 }
 
-STRING_BENCHMARK(wstring, boost_istarts_with_chars100_search10)
+STRING_BENCHMARK(wstring, istarts_with_boost_chars100_search10)
 {
     test_starts_with<wchar_t>::boost_istarts_with_chars100_search10();
 }
