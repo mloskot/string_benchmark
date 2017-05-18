@@ -18,17 +18,29 @@ if(CMAKE_CXX_COMPILER_ID STREQUAL "Clang" OR CMAKE_COMPILER_IS_GNUCXX)
     endif()
 endif()
 
+
+if(MSVC)
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /MP")
+  set(STRING_BENCHMARK_LIBS ${CELERO_INSTALL_PREFIX}/lib/celero.lib PowrProf.lib)
+endif()
+
+if (UNIX)
+  set(STRING_BENCHMARK_LIBS ${CELERO_INSTALL_PREFIX}/lib/libcelero.lib)
+endif()
+
+include_directories(${CELERO_INSTALL_PREFIX}/include)
+if(Boost_FOUND)
+  include_directories(${Boost_INCLUDE_DIRS})
+  add_definitions("-DHAS_BOOST")
+endif()
+
 file(GLOB headers *.hpp)
 file(GLOB sources *.cpp)
 
 message(STATUS "Configuring build target")
 add_executable(string_benchmark ${headers} ${sources})
-add_dependencies(string_benchmark hayai)
-include_directories(${HAYAI_INCLUDE_DIR})
-if(Boost_FOUND)
-  include_directories(${Boost_INCLUDE_DIRS})
-  add_definitions("-DHAS_BOOST")
-endif()
+target_link_libraries(string_benchmark ${STRING_BENCHMARK_LIBS})
+add_dependencies(string_benchmark celero)
 
 message(STATUS "Configuring run target")
 add_custom_target(run ALL $<TARGET_FILE:string_benchmark> DEPENDS string_benchmark)

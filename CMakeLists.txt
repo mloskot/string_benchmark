@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 2.8)
-project(string_benchmark)
+project(string_benchmark CXX)
 
 if(NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE "Release" CACHE STRING
@@ -11,23 +11,25 @@ endif()
 find_package(Git REQUIRED)
 
 include(ExternalProject)
-set(HAYAI_DIR ${CMAKE_BINARY_DIR}/hayai)
-message(STATUS "Configuring Hayai")
+message(STATUS "Configuring Celero")
+set (CELERO_PREFIX ${CMAKE_BINARY_DIR}/celero)
+set (CELERO_INSTALL_PREFIX ${CELERO_PREFIX}/install)
 ExternalProject_Add(
-    hayai
-    PREFIX ${CMAKE_BINARY_DIR}/hayai
-    GIT_REPOSITORY https://github.com/nickbruun/hayai.git
+    celero
+    PREFIX ${CELERO_PREFIX}
+    GIT_REPOSITORY https://github.com/DigitalInBlue/Celero.git
     GIT_TAG master
-    TIMEOUT 10
+    GIT_SHALLOW 1
     UPDATE_COMMAND ${GIT_EXECUTABLE} pull
-    CONFIGURE_COMMAND ""
-    BUILD_COMMAND ""
-    INSTALL_COMMAND ""
-    LOG_DOWNLOAD ON)
-ExternalProject_Get_Property(hayai SOURCE_DIR)
-set(HAYAI_INCLUDE_DIR ${SOURCE_DIR}/src CACHE INTERNAL "Path to Hayai headers")
-message(STATUS "HAYAI_DIR=${HAYAI_DIR}")
-message(STATUS "HAYAI_INCLUDE_DIR=${HAYAI_INCLUDE_DIR}")
+    CMAKE_ARGS
+      -DCMAKE_INSTALL_PREFIX=${CELERO_INSTALL_PREFIX}
+      -DCELERO_COMPILE_DYNAMIC_LIBRARIES:BOOL=OFF
+      -DCELERO_ENABLE_EXPERIMENTS:BOOL=OFF
+      -DCELERO_ENABLE_FOLDERS:BOOL=OFF
+)
+find_package(Boost 1.54.0)
+message(STATUS "CELERO_PREFIX=${CELERO_PREFIX}")
+message(STATUS "CELERO_INSTALL_PREFIX=${CELERO_INSTALL_PREFIX}")
 
 find_package(Boost 1.54.0)
 message(STATUS "Boost_FOUND=${Boost_FOUND}")
