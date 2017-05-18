@@ -19,12 +19,14 @@ matrix:
         apt:
           sources: &sources-gcc
             - ubuntu-toolchain-r-test
+            - boost-latest
           packages:
             - *apt-common
             - g++-5
             - g++-5-multilib
             - gcc-5-multilib
             - gcc-multilib # https://lists.debian.org/debian-gcc/2016/04/msg00120.html
+            - libboost-dev
     - env: MYCC=gcc-5 MYCXX=g++-5 ARCH=-m64
       compiler: gcc
       addons:
@@ -33,6 +35,7 @@ matrix:
           packages:
             - *apt-common
             - g++-5
+            - libboost-dev
 script:
   - >
      mkdir -p build &&
