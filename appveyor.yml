@@ -24,7 +24,7 @@ before_build:
         $G="Visual Studio 14 2015"
       }
       Write-Host "Running CMake:" -ForegroundColor Magenta
-      cmake.exe -G $G -DCMAKE_BUILD_TYPE:STRING=Release $env:APPVEYOR_BUILD_FOLDER
+      cmake.exe -G $G -DCMAKE_BUILD_TYPE:STRING=Release -DBOOST_ROOT=C:/Libraries/boost_1_63_0 $env:APPVEYOR_BUILD_FOLDER
       Write-Host "Running MSBuild:" -ForegroundColor Magenta
 
 build:
