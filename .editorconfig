@@ -1,0 +1,32 @@
+# EditorConfig is awesome: http://EditorConfig.org
+#
+# NOTE: Keep settings in sync with the master .clang-format file
+#
+# top-most EditorConfig file
+root = true
+
+# C++ source files
+[*.{cpp,hpp}]
+indent_style = space
+indent_size = 4
+max_line_length = 120
+insert_final_newline = true
+trim_trailing_whitespace = true
+
+# CMake configuration files
+[{CMakeLists.txt,*.cmake}]
+indent_size = 2
+indent_style = space
+trim_trailing_whitespace = true
+
+# CI configuration files
+[{.travis.yml,appveyor.yml,Vagrantfile}]
+indent_size = 2
+indent_style = space
+trim_trailing_whitespace = true
+
+# Markdown/reStructuredText documentation files
+[*.{md,markdown,rst}]
+indent_size = 2
+indent_style = space
+trim_trailing_whitespace = true
