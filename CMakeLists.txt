@@ -20,6 +20,7 @@ ExternalProject_Add(
     GIT_REPOSITORY https://github.com/DigitalInBlue/Celero.git
     GIT_TAG master
     GIT_SHALLOW 1
+    TIMEOUT 10
     UPDATE_COMMAND ${GIT_EXECUTABLE} pull
     CMAKE_ARGS
       -DCMAKE_INSTALL_PREFIX=${CELERO_INSTALL_PREFIX}
