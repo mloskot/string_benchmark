@@ -6,6 +6,8 @@
 #include <cstring>
 #ifndef _MSC_VER
 #include <vector>
+#include <strings.h> // strncasecmp
+#include <wchar.h>   // wcsncasecmp
 #endif
 #include <string>
 
@@ -89,9 +91,9 @@ struct fixture<char> : public base_fixture<char, fixture>
     static auto strnicmp(char const* const lhs, char const* const rhs, std::size_t count) -> int
     {
 #ifdef _MSC_VER
-        return _strnicmp(lhs, rhs, count);
+        return ::_strnicmp(lhs, rhs, count);
 #else
-#error no _strnicmp function
+        return ::strncasecmp(lhs, rhs, count);
 #endif
     }
 
@@ -142,9 +144,9 @@ struct fixture<wchar_t> : public base_fixture<wchar_t, fixture>
     static auto strnicmp(wchar_t const* const lhs, wchar_t const* const rhs, std::size_t count) -> int
     {
 #ifdef _MSC_VER
-        return _wcsnicmp(lhs, rhs, count);
+        return ::_wcsnicmp(lhs, rhs, count);
 #else
-#error no _wcsnicmp function
+        return ::wcsncasecmp(lhs, rhs, count);
 #endif
     }
 
