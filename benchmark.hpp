@@ -24,9 +24,9 @@ namespace config
 {
 
 #ifdef NDEBUG
-enum { runs = 1000, iterations = 1000 };
-#else
 enum { runs = 10, iterations = 1000 };
+#else
+enum { runs = 1, iterations = 10 };
 #endif
 
 }} // namespace string_benchmark::config
