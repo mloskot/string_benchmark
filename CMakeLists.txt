@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.0.0)
+cmake_minimum_required(VERSION 2.8)
 project(string_benchmark CXX)
 
 if(NOT CMAKE_BUILD_TYPE)
@@ -60,11 +60,6 @@ endif()
 
 if(MSVC)
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /MP")
-  set(celero_libs ${CELERO_INSTALL_PREFIX}/lib/celerod.lib PowrProf.lib)
-endif()
-
-if (UNIX)
-  set(celero_libs ${CELERO_INSTALL_PREFIX}/lib/libcelero.lib)
 endif()
 
 include_directories(${CELERO_INSTALL_PREFIX}/include)
@@ -80,7 +75,14 @@ set(benchmarks benchmark_istarts_with)
 foreach(benchmark ${benchmarks})
   message(STATUS "Configuring target: ${benchmark}")
   add_executable(${benchmark} ${benchmark}.cpp ${sources} ${headers})
-  target_link_libraries(${benchmark} ${celero_libs})
+
+  if(MSVC)
+    target_link_libraries(${benchmark} debug ${CELERO_INSTALL_PREFIX}/lib/celerod.lib PowrProf.lib)
+    target_link_libraries(${benchmark} optimized ${CELERO_INSTALL_PREFIX}/lib/celero.lib PowrProf.lib)
+  elseif (UNIX)
+    target_link_libraries(${benchmark} ${CELERO_INSTALL_PREFIX}/lib/libcelero.lib)
+  endif()
+
   add_dependencies(${benchmark} celero)
   add_custom_target(run_${benchmark} ALL $<TARGET_FILE:${benchmark}> DEPENDS ${benchmark})
 endforeach()
