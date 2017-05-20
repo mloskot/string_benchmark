@@ -1,5 +1,8 @@
 #include "fixture.hpp"
 
+namespace string_benchmark
+{
+
 n10strings n10string_samples = {
     "something1",
     "something1something2",
@@ -25,3 +28,5 @@ w10strings w10string_samples = {
     L"something1something2something3something4something5something6something7something8something9",
     L"something1something2something3something4something5something6something7something8something9something10",
 };
+
+}

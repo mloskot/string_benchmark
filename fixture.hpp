@@ -10,6 +10,7 @@
 #include <wchar.h>   // wcsncasecmp
 #endif
 #include <string>
+#include "benchmark.hpp"
 
 #ifndef STRING_BENCHMARK_ENABLE_STD_SPRINTF
 #define STRING_BENCHMARK_ENABLE_STD_SPRINTF 1
@@ -30,6 +31,9 @@ __attribute__((format(printf, format_param, dots_param)))
 #define _Printf_format_string_
 #endif
 
+namespace string_benchmark
+{
+
 using n10strings = std::array<char const*, 10>;
 using w10strings = std::array<wchar_t const*, 10>;
 
@@ -37,7 +41,7 @@ extern n10strings n10string_samples;
 extern w10strings w10string_samples;
 
 template <typename Char, template<typename> class Fixture>
-struct base_fixture
+struct base_string_fixture
 {
     using string = std::basic_string<Char, std::char_traits<Char>>;
     using fixture = Fixture<Char>;
@@ -76,10 +80,10 @@ struct base_fixture
 };
 
 template <typename Char>
-struct fixture;
+struct string_fixture;
 
 template <>
-struct fixture<char> : public base_fixture<char, fixture>
+struct string_fixture<char> : public base_string_fixture<char, string_fixture>
 {
     using string = std::string;
 
@@ -134,7 +138,7 @@ struct fixture<char> : public base_fixture<char, fixture>
 };
 
 template <>
-struct fixture<wchar_t> : public base_fixture<wchar_t, fixture>
+struct string_fixture<wchar_t> : public base_string_fixture<wchar_t, string_fixture>
 {
     static auto samples() -> w10strings const&
     {
@@ -196,3 +200,32 @@ struct fixture<wchar_t> : public base_fixture<wchar_t, fixture>
         return n;
     }
 };
+
+template <typename Char>
+struct  data_fixture : celero::TestFixture
+{
+    using fixture = string_fixture<Char>;
+    using string = std::basic_string<Char>;
+    string s1;
+    string s2;
+
+    auto getExperimentValues() const -> std::vector<std::pair<int64_t, uint64_t>>
+    {
+        std::vector<std::pair<int64_t, uint64_t>> v(fixture::samples().size());
+        std::int64_t n{0};
+        std::generate(v.begin(), v.end(),
+            [&n]() -> std::pair<int64_t, uint64_t> { return {n += 10, 0}; });
+        return v;
+    }
+
+    void setUp(int64_t experimentValue) final
+    {
+        auto const& samples = fixture::samples();
+        assert(experimentValue % 10 == 0);
+        auto const i = static_cast<std::size_t>(experimentValue / 10)  -1;
+        assert(i < samples.size());
+        s1 = s2 = samples[i];
+    }
+};
+
+}

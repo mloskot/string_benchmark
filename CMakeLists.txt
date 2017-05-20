@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 2.8)
+cmake_minimum_required(VERSION 3.0.0)
 project(string_benchmark CXX)
 
 if(NOT CMAKE_BUILD_TYPE)
@@ -22,11 +22,13 @@ ExternalProject_Add(
     GIT_SHALLOW 1
     TIMEOUT 10
     UPDATE_COMMAND ${GIT_EXECUTABLE} pull
+    BINARY_DIR ${CELERO_PREFIX}/build
     CMAKE_ARGS
       -DCMAKE_INSTALL_PREFIX=${CELERO_INSTALL_PREFIX}
       -DCELERO_COMPILE_DYNAMIC_LIBRARIES:BOOL=OFF
       -DCELERO_ENABLE_EXPERIMENTS:BOOL=OFF
       -DCELERO_ENABLE_FOLDERS:BOOL=OFF
+    BUILD_COMMAND "${CMAKE_COMMAND}" --build ${CELERO_PREFIX}/build --config Release
 )
 find_package(Boost 1.54.0)
 message(STATUS "CELERO_PREFIX=${CELERO_PREFIX}")
@@ -36,32 +38,49 @@ find_package(Boost 1.54.0)
 message(STATUS "Boost_FOUND=${Boost_FOUND}")
 message(STATUS "Boost_INCLUDE_DIRS=${Boost_INCLUDE_DIRS}")
 
-add_subdirectory(src)
+if(CMAKE_CXX_COMPILER_ID STREQUAL "Clang" OR CMAKE_COMPILER_IS_GNUCXX)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Werror")
+    include(CheckCXXCompilerFlag)
+    CHECK_CXX_COMPILER_FLAG("-std=c++14" COMPILER_SUPPORTS_CXX14)
+    CHECK_CXX_COMPILER_FLAG("-std=c++11" COMPILER_SUPPORTS_CXX11)
+    CHECK_CXX_COMPILER_FLAG("-std=c++0x" COMPILER_SUPPORTS_CXX0X)
+    if(COMPILER_SUPPORTS_CXX14)
+        message(STATUS "C++ Standard: C++14")
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14")
+    elseif(COMPILER_SUPPORTS_CXX11)
+        message(STATUS "C++ Standard: C++11")
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
+    elseif(COMPILER_SUPPORTS_CXX0X)
+        message(STATUS "C++ Standard: C++0x")
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x")
+    else()
+        message(WARNING "Compiler ${CMAKE_CXX_COMPILER} has no C++ 0x/11/14 support.")
+    endif()
+endif()
 
-# collect_info_files function
-# Takes collect_info_files - list of non-source files to look for
-# Returns INFO_FILES with all files found from the input list.
-# Based on macro posted here
-# http://lists.qt-project.org/pipermail/qt-creator/2012-August/001191.html
-function(collect_info_files)
-    list(APPEND _all_found)
-    foreach(_it ${ARGN})
-        if(NOT IS_DIRECTORY ${_it})
-            get_filename_component(_path ${_it} ABSOLUTE)
-            if(EXISTS ${_path})
-                list(APPEND _all_found ${_it})
-                if(NOT ${_it} MATCHES "^/\\\\..*$;~$")
-                    set_source_files_properties(${_it} PROPERTIES HEADER_FILE_ONLY TRUE)
-                endif()
-            endif()
-        endif()
-    endforeach()
-    set(INFO_FILES ${_all_found} PARENT_SCOPE)
-endfunction()
+if(MSVC)
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /MP")
+  set(celero_libs ${CELERO_INSTALL_PREFIX}/lib/celerod.lib PowrProf.lib)
+endif()
 
-# List all non-source code files (documents, configuration files, etc.)
-set(other_files .gitignore .travis.yml appveyor.yml README.md)
-# Collect all existing files and configure as non-sources.
-collect_info_files(${other_files})
-# Create dummy target/project for an IDE with documents attached
-add_custom_target(docs SOURCES ${INFO_FILES})
+if (UNIX)
+  set(celero_libs ${CELERO_INSTALL_PREFIX}/lib/libcelero.lib)
+endif()
+
+include_directories(${CELERO_INSTALL_PREFIX}/include)
+if(Boost_FOUND)
+  include_directories(${Boost_INCLUDE_DIRS})
+  add_definitions("-DHAS_BOOST")
+endif()
+
+file(GLOB headers *.hpp)
+file(GLOB sources fixture.cpp)
+set(benchmarks benchmark_istarts_with)
+
+foreach(benchmark ${benchmarks})
+  message(STATUS "Configuring target: ${benchmark}")
+  add_executable(${benchmark} ${benchmark}.cpp ${sources} ${headers})
+  target_link_libraries(${benchmark} ${celero_libs})
+  add_dependencies(${benchmark} celero)
+  add_custom_target(run_${benchmark} ALL $<TARGET_FILE:${benchmark}> DEPENDS ${benchmark})
+endforeach()
