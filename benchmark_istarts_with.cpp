@@ -39,7 +39,7 @@ STRING_BENCHMARK(istarts_with, boost, char)
 
 #endif // HAS_BOOST
 
-STRING_BASELINE(istarts_with_w, strnicmp_char10, wchar_t)
+STRING_BASELINE(w_istarts_with, strnicmp_char10, wchar_t)
 {
     auto const r = fixture::strnicmp(s1.c_str(), s2.c_str(), 10);
 
@@ -48,7 +48,7 @@ STRING_BASELINE(istarts_with_w, strnicmp_char10, wchar_t)
 #endif
 }
 
-STRING_BENCHMARK(istarts_with_w, strnicmp_strlen, wchar_t)
+STRING_BENCHMARK(w_istarts_with, strnicmp_strlen, wchar_t)
 {
     auto const r = fixture::strnicmp(s1.c_str(), s2.c_str(), fixture::strlen(s1.c_str()));
 
@@ -59,7 +59,7 @@ STRING_BENCHMARK(istarts_with_w, strnicmp_strlen, wchar_t)
 
 #ifdef HAS_BOOST
 
-STRING_BENCHMARK(istarts_with_w, boost, wchar_t)
+STRING_BENCHMARK(w_istarts_with, boost, wchar_t)
 {
     auto const r = boost::istarts_with(s1, s2);
 
