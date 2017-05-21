@@ -10,7 +10,6 @@ ExternalProject_Add(
   catch
   PREFIX ${CATCH_PREFIX}
   GIT_REPOSITORY https://github.com/philsquared/Catch.git
-  GIT_SHALLOW 1
   TIMEOUT 10
   UPDATE_COMMAND ${GIT_EXECUTABLE} pull
   CONFIGURE_COMMAND ""
@@ -28,7 +27,6 @@ ExternalProject_Add(
     celero
     PREFIX ${CMAKE_BINARY_DIR}/catch
     GIT_REPOSITORY https://github.com/DigitalInBlue/Celero.git
-    GIT_SHALLOW 1
     TIMEOUT 10
     UPDATE_COMMAND ${GIT_EXECUTABLE} pull
     CMAKE_ARGS
