@@ -10,6 +10,7 @@ CELERO_MAIN
 STRING_BASELINE(istarts_with, strnicmp_char10, char)
 {
     auto const r = fixture::strnicmp(s1.c_str(), s2.c_str(), 10);
+    ignore_unused(r);
 
 #ifdef STRING_BENCHMARK_ENABLE_TESTS
     assert(r == 0);
@@ -19,6 +20,7 @@ STRING_BASELINE(istarts_with, strnicmp_char10, char)
 STRING_BENCHMARK(istarts_with, strnicmp_strlen, char)
 {
     auto const r = fixture::strnicmp(s1.c_str(), s2.c_str(), fixture::strlen(s1.c_str()));
+    ignore_unused(r);
 
 #ifdef STRING_BENCHMARK_ENABLE_TESTS
     assert(r == 0);
@@ -30,6 +32,7 @@ STRING_BENCHMARK(istarts_with, strnicmp_strlen, char)
 STRING_BENCHMARK(istarts_with, boost, char)
 {
     auto const r = boost::istarts_with(s1, s2);
+    ignore_unused(r);
 
 #ifdef STRING_BENCHMARK_ENABLE_TESTS
     assert(r);
@@ -42,6 +45,7 @@ STRING_BENCHMARK(istarts_with, boost, char)
 STRING_BASELINE(w_istarts_with, strnicmp_char10, wchar_t)
 {
     auto const r = fixture::strnicmp(s1.c_str(), s2.c_str(), 10);
+    ignore_unused(r);
 
 #ifdef STRING_BENCHMARK_ENABLE_TESTS
     assert(r == 0);
@@ -51,6 +55,7 @@ STRING_BASELINE(w_istarts_with, strnicmp_char10, wchar_t)
 STRING_BENCHMARK(w_istarts_with, strnicmp_strlen, wchar_t)
 {
     auto const r = fixture::strnicmp(s1.c_str(), s2.c_str(), fixture::strlen(s1.c_str()));
+    ignore_unused(r);
 
 #ifdef STRING_BENCHMARK_ENABLE_TESTS
     assert(r == 0);
@@ -62,6 +67,7 @@ STRING_BENCHMARK(w_istarts_with, strnicmp_strlen, wchar_t)
 STRING_BENCHMARK(w_istarts_with, boost, wchar_t)
 {
     auto const r = boost::istarts_with(s1, s2);
+    ignore_unused(r);
 
 #ifdef STRING_BENCHMARK_ENABLE_TESTS
     assert(r);

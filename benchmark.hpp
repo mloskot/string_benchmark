@@ -31,6 +31,9 @@ enum { runs = 1, iterations = 10 };
 
 }} // namespace string_benchmark::config
 
+template <typename T>
+inline constexpr void ignore_unused(T const&) {}
+
 #define STRING_BASELINE(group_name, benchmark_name, char_type) \
     BASELINE_F(group_name, benchmark_name, \
         string_benchmark::data_fixture<char_type>, \
