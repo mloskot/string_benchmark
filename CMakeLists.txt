@@ -5,7 +5,7 @@ include(ExternalProject)
 find_package(Git REQUIRED)
 
 message(STATUS "Configuring Catch")
-set (CATCH_PREFIX ${CMAKE_BINARY_DIR}/celero)
+set (CATCH_PREFIX ${CMAKE_BINARY_DIR}/catch)
 ExternalProject_Add(
   catch
   PREFIX ${CATCH_PREFIX}
@@ -15,8 +15,7 @@ ExternalProject_Add(
   UPDATE_COMMAND ${GIT_EXECUTABLE} pull
   CONFIGURE_COMMAND ""
   BUILD_COMMAND ""
-  INSTALL_COMMAND ""
-  LOG_DOWNLOAD ON)
+  INSTALL_COMMAND "")
 ExternalProject_Get_Property(catch SOURCE_DIR)
 set(CATCH_INCLUDE_DIR ${SOURCE_DIR}/include CACHE INTERNAL "Path to Catch include directory")
 include_directories(${CATCH_INCLUDE_DIR})
@@ -36,8 +35,7 @@ ExternalProject_Add(
       -DCMAKE_INSTALL_PREFIX=${CELERO_INSTALL_PREFIX}
       -DCELERO_COMPILE_DYNAMIC_LIBRARIES:BOOL=OFF
       -DCELERO_ENABLE_EXPERIMENTS:BOOL=OFF
-      -DCELERO_ENABLE_FOLDERS:BOOL=OFF
-)
+      -DCELERO_ENABLE_FOLDERS:BOOL=OFF)
 message(STATUS "CELERO_PREFIX=${CELERO_PREFIX}")
 message(STATUS "CELERO_INSTALL_PREFIX=${CELERO_INSTALL_PREFIX}")
 include_directories(${CELERO_INSTALL_PREFIX}/include)
