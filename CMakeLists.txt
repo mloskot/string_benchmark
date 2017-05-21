@@ -82,12 +82,21 @@ endif()
 message(STATUS "Boost_FOUND=${Boost_FOUND}")
 message(STATUS "Boost_INCLUDE_DIRS=${Boost_INCLUDE_DIRS}")
 
+enable_testing()
+set(tests test_fixture)
+foreach(test ${tests})
+  message(STATUS "Configuring test: ${test}")
+  add_executable(${test} ${test}.cpp)
+  add_dependencies(${test} catch)
+  add_test(NAME ${test} COMMAND ${test})
+endforeach()
+
 file(GLOB headers *.hpp)
 file(GLOB sources fixture.cpp)
 set(benchmarks benchmark_istarts_with)
 
 foreach(benchmark ${benchmarks})
-  message(STATUS "Configuring target: ${benchmark}")
+  message(STATUS "Configuring benchmark: ${benchmark}")
   add_executable(${benchmark} ${benchmark}.cpp ${sources} ${headers})
 
   if(MSVC)
