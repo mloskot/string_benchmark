@@ -2,19 +2,51 @@ cmake_minimum_required(VERSION 2.8)
 project(string_benchmark CXX)
 include(ExternalProject)
 
+if(NOT CMAKE_BUILD_TYPE)
+    set(CMAKE_BUILD_TYPE "Release" CACHE STRING
+        "Choose the type of build, options are: Debug Release RelWithDebInfo MinSizeRel."
+        FORCE)
+    message(STATUS "Configuring default CMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}")
+endif()
+
+if(CMAKE_CXX_COMPILER_ID STREQUAL "Clang" OR CMAKE_COMPILER_IS_GNUCXX)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Werror")
+    include(CheckCXXCompilerFlag)
+    CHECK_CXX_COMPILER_FLAG("-std=c++14" COMPILER_SUPPORTS_CXX14)
+    CHECK_CXX_COMPILER_FLAG("-std=c++11" COMPILER_SUPPORTS_CXX11)
+    CHECK_CXX_COMPILER_FLAG("-std=c++0x" COMPILER_SUPPORTS_CXX0X)
+    if(COMPILER_SUPPORTS_CXX14)
+        message(STATUS "C++ Standard: C++14")
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14")
+    elseif(COMPILER_SUPPORTS_CXX11)
+        message(STATUS "C++ Standard: C++11")
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
+    elseif(COMPILER_SUPPORTS_CXX0X)
+        message(STATUS "C++ Standard: C++0x")
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x")
+    else()
+        message(WARNING "Compiler ${CMAKE_CXX_COMPILER} has no C++ 0x/11/14 support.")
+    endif()
+endif()
+
+if(MSVC)
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /MP")
+endif()
+
 find_package(Git REQUIRED)
 
 message(STATUS "Configuring Catch")
-set (CATCH_PREFIX ${CMAKE_BINARY_DIR}/catch)
 ExternalProject_Add(
   catch
-  PREFIX ${CATCH_PREFIX}
+  PREFIX ${CMAKE_BINARY_DIR}/catch
   GIT_REPOSITORY https://github.com/philsquared/Catch.git
+  GIT_TAG master
   TIMEOUT 10
   UPDATE_COMMAND ${GIT_EXECUTABLE} pull
   CONFIGURE_COMMAND ""
   BUILD_COMMAND ""
-  INSTALL_COMMAND "")
+  INSTALL_COMMAND ""
+  LOG_DOWNLOAD ON)
 ExternalProject_Get_Property(catch SOURCE_DIR)
 set(CATCH_INCLUDE_DIR ${SOURCE_DIR}/include CACHE INTERNAL "Path to Catch include directory")
 include_directories(${CATCH_INCLUDE_DIR})
@@ -25,15 +57,20 @@ set (CELERO_PREFIX ${CMAKE_BINARY_DIR}/celero)
 set (CELERO_INSTALL_PREFIX ${CELERO_PREFIX}/install)
 ExternalProject_Add(
     celero
-    PREFIX ${CMAKE_BINARY_DIR}/catch
+    PREFIX ${CELERO_PREFIX}
     GIT_REPOSITORY https://github.com/DigitalInBlue/Celero.git
+    GIT_TAG master
     TIMEOUT 10
     UPDATE_COMMAND ${GIT_EXECUTABLE} pull
+    BINARY_DIR ${CELERO_PREFIX}/build
     CMAKE_ARGS
+      -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
       -DCMAKE_INSTALL_PREFIX=${CELERO_INSTALL_PREFIX}
       -DCELERO_COMPILE_DYNAMIC_LIBRARIES:BOOL=OFF
       -DCELERO_ENABLE_EXPERIMENTS:BOOL=OFF
-      -DCELERO_ENABLE_FOLDERS:BOOL=OFF)
+      -DCELERO_ENABLE_FOLDERS:BOOL=OFF
+    BUILD_COMMAND "${CMAKE_COMMAND}" --build ${CELERO_PREFIX}/build --config ${CMAKE_BUILD_TYPE}
+)
 message(STATUS "CELERO_PREFIX=${CELERO_PREFIX}")
 message(STATUS "CELERO_INSTALL_PREFIX=${CELERO_INSTALL_PREFIX}")
 include_directories(${CELERO_INSTALL_PREFIX}/include)
