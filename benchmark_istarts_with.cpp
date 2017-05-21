@@ -1,7 +1,9 @@
 #define CELERO_STATIC
 #include <algorithm>
 #include <iostream>
+#ifdef HAS_BOOST
 #include <boost/algorithm/string/predicate.hpp>
+#endif
 #include "benchmark.hpp"
 #include "fixture.hpp"
 
