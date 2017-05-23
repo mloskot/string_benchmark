@@ -5,6 +5,7 @@
 #include <cstdarg>
 #include <cstdio>
 #include <cstring>
+#include <random>
 #ifndef _MSC_VER
 #include <vector>
 #include <strings.h> // strncasecmp
@@ -53,7 +54,6 @@ struct base_string_fixture
         auto const n_len = fixture::strlen(n);
         if (s_len < n_len)
             return false;
-
         return fixture::strnicmp(s, n, n_len) == 0;
     }
 
@@ -218,6 +218,21 @@ struct string_fixture<wchar_t> : public base_string_fixture<wchar_t, string_fixt
 };
 
 template <typename Char>
+inline auto random_string(std::size_t size) -> typename string_fixture<Char>::string
+{
+    using string = typename string_fixture<Char>::string;
+
+    string alphabet; alphabet.reserve('z' - 'a' + 1);
+    for (Char c = 'a'; c <= 'z'; ++c)
+        alphabet.push_back(c);
+    std::mt19937_64 gen{std::random_device()()};
+    std::uniform_int_distribution<size_t> dist{0, alphabet.length() - 1};
+    string ret;
+    std::generate_n(std::back_inserter(ret), size, [&] { return alphabet[dist(gen)]; });
+    return ret;
+}
+
+template <typename Char>
 struct  data_fixture : celero::TestFixture
 {
     using fixture = string_fixture<Char>;
@@ -227,20 +242,20 @@ struct  data_fixture : celero::TestFixture
 
     auto getExperimentValues() const -> std::vector<std::pair<int64_t, uint64_t>>
     {
-        std::vector<std::pair<int64_t, uint64_t>> v(fixture::samples().size());
+        std::vector<std::pair<int64_t, uint64_t>> v;
+        v.emplace_back(0, 0);
         std::int64_t n{0};
-        std::generate(v.begin(), v.end(),
+        std::generate_n(std::back_inserter(v), 10,
             [&n]() -> std::pair<int64_t, uint64_t> { return {n += 10, 0}; });
+        v.emplace_back(512, 0);
+        v.emplace_back(1024, 0);
         return v;
     }
 
     void setUp(int64_t experimentValue) final
     {
-        auto const& samples = fixture::samples();
-        assert(experimentValue % 10 == 0);
-        auto const i = static_cast<std::size_t>(experimentValue / 10)  -1;
-        assert(i < samples.size());
-        s1 = s2 = samples[i];
+        auto const size = static_cast<std::size_t>(experimentValue);
+        s1 = s2 = random_string<Char>(size);
     }
 };
 

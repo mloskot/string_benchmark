@@ -9,12 +9,11 @@
 #pragma warning(pop)
 #endif
 
-//#define STRING_BENCHMARK_ENABLE_TESTS
 #ifndef NDEBUG
-#define STRING_BENCHMARK_ENABLE_TESTS
+#define STRING_BENCHMARK_ENABLE_ASSERT
 #endif
 
-#ifdef STRING_BENCHMARK_ENABLE_TESTS
+#ifdef STRING_BENCHMARK_ENABLE_ASSERT
 #include <cassert>
 #endif
 
@@ -23,10 +22,12 @@ namespace string_benchmark
 namespace config
 {
 
+// If samples == 0, then the test is repeated until it as ran for at least one
+// second or at least 30 samples have been taken.
 #ifdef NDEBUG
-enum { runs = 10, iterations = 1000 };
+enum { samples = 100, iterations = 1000 };
 #else
-enum { runs = 1, iterations = 10 };
+enum { samples = 1, iterations = 10 };
 #endif
 
 }} // namespace string_benchmark::config
@@ -37,11 +38,11 @@ inline constexpr void ignore_unused(T const&) {}
 #define STRING_BASELINE(group_name, benchmark_name, char_type) \
     BASELINE_F(group_name, benchmark_name, \
         string_benchmark::data_fixture<char_type>, \
-        (string_benchmark::config::runs), \
+        (string_benchmark::config::samples), \
         (string_benchmark::config::iterations))
 
 #define STRING_BENCHMARK(group_name, benchmark_name, char_type) \
     BENCHMARK_F(group_name, benchmark_name, \
         string_benchmark::data_fixture<char_type>, \
-        (string_benchmark::config::runs), \
+        (string_benchmark::config::samples), \
         (string_benchmark::config::iterations))

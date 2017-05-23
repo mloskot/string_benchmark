@@ -10,7 +10,7 @@ using wfixture = string_benchmark::string_fixture<wchar_t>;
 
 TEST_CASE("istarts_with(A, B)")
 {
-    nfixture::string a{"something1"};
+    nfixture::string a{"SOMETHING1"};
     nfixture::string b{"something1something2"};
 
     SECTION("A and B are empty")
@@ -87,6 +87,18 @@ TEST_CASE("istarts_with(A, B)")
         }
     }
 
+    SECTION("A not empty and not starts with B and strlen(A) < strlen(B)")
+    {
+        b.assign(b.size(), 'X');
+        SECTION("istarts_with(A, B) == false")
+        {
+            REQUIRE(!nfixture::istarts_with(a, b));
+#ifdef HAS_BOOST
+            REQUIRE(!boost::istarts_with(a, b));
+#endif
+        }
+    }
+
     SECTION("B not empty and starts with A and strlen(B) > strlen(A)")
     {
         SECTION("istarts_with(B, A) == true")
@@ -94,6 +106,18 @@ TEST_CASE("istarts_with(A, B)")
             REQUIRE(nfixture::istarts_with(b, a));
 #ifdef HAS_BOOST
             REQUIRE(boost::istarts_with(b, a));
+#endif
+        }
+    }
+
+    SECTION("B not empty and not starts with A and strlen(B) > strlen(A)")
+    {
+        a.assign(a.size(), 'X');
+        SECTION("istarts_with(B, A) == false")
+        {
+            REQUIRE(!nfixture::istarts_with(b, a));
+#ifdef HAS_BOOST
+            REQUIRE(!boost::istarts_with(b, a));
 #endif
         }
     }
