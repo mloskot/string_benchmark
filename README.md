@@ -16,13 +16,13 @@ The benchmark uses [Celero](https://github.com/DigitalInBlue/Celero) library.
 
 See Travis CI and AppVeyor build logs.
 
-### `istarts_with`
+### `istarts_with` with GCC 4.8.4
 
-![istarts_with chart](chart_istarts_with.png)
+![istarts_with chart](chart_istarts_with_gcc484.png)
 
-### `iends_with`
+### `iends_with` with GCC 4.8.4
 
-![iends_with chart](chart_iends_with.png)
+![iends_with chart](chart_iends_with_gcc484.png)
 
 ## Usage
 
