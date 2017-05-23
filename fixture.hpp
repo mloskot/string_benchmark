@@ -59,7 +59,28 @@ struct base_string_fixture
 
     static bool istarts_with(string const& s, string const& n)
     {
-        return istarts_with(s.c_str(), n.c_str());
+        auto const n_len = n.length();
+        if (s.length() < n_len)
+            return false;
+        return fixture::strnicmp(s.c_str(), n.c_str(), n_len) == 0;
+    }
+
+    static bool iends_with(Char const* const s, Char const* const n)
+    {
+        auto const s_len = fixture::strlen(s);
+        auto const n_len = fixture::strlen(n);
+        if (s_len < n_len)
+            return false;
+        return fixture::strnicmp(s + (s_len - n_len), n, n_len) == 0;
+    }
+
+    static bool iends_with(string const& s, string const& n)
+    {
+        auto const s_len = s.length();
+        auto const n_len = n.length();
+        if (s_len < n_len)
+            return false;
+        return fixture::strnicmp(s.c_str() + (s_len - n_len), n.c_str(), n_len) == 0;
     }
 
     static void sprintf_v(string& dst, Char const* const fmt, va_list args)

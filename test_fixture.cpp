@@ -6,12 +6,239 @@
 #endif
 
 using nfixture = string_benchmark::string_fixture<char>;
-using wfixture = string_benchmark::string_fixture<wchar_t>;
+using nstring = typename nfixture::string;
+using nchar = typename nstring::value_type;
 
-TEST_CASE("istarts_with(A, B)")
+TEST_CASE("istarts_with(char* A, char* B)")
 {
-    nfixture::string a{"SOMETHING1"};
-    nfixture::string b{"something1something2"};
+    nfixture::string a{"something1something2"};
+    nfixture::string b{"SOMETHING1"};
+
+    SECTION("A and B are empty")
+    {
+        a.clear();
+        b.clear();
+
+        SECTION("istarts_with(A, B) == true")
+        {
+            REQUIRE(nfixture::istarts_with(a.c_str(), b.c_str()));
+#ifdef HAS_BOOST
+            REQUIRE(boost::istarts_with(a.c_str(), b.c_str()));
+#endif
+        }
+
+        SECTION("istarts_with(B, A) == true")
+        {
+            REQUIRE(nfixture::istarts_with(b.c_str(), a.c_str()));
+#ifdef HAS_BOOST
+            REQUIRE(boost::istarts_with(b.c_str(), a.c_str()));
+#endif
+        }
+    }
+
+    SECTION("A is empty and B is not empty")
+    {
+        a.clear();
+
+        SECTION("istarts_with(A, B) == false")
+        {
+            REQUIRE(!nfixture::istarts_with(a.c_str(), b.c_str()));
+#ifdef HAS_BOOST
+            REQUIRE(!boost::istarts_with(a.c_str(), b.c_str()));
+#endif
+        }
+
+        SECTION("istarts_with(B, A) == true")
+        {
+            REQUIRE(nfixture::istarts_with(b.c_str(), a.c_str()));
+#ifdef HAS_BOOST
+            REQUIRE(boost::istarts_with(b.c_str(), a.c_str()));
+#endif
+        }
+    }
+
+    SECTION("A not empty and A == B")
+    {
+        b = a;
+
+        SECTION("istarts_with(A, B) == true")
+        {
+            REQUIRE(nfixture::istarts_with(a.c_str(), b.c_str()));
+#ifdef HAS_BOOST
+            REQUIRE(boost::istarts_with(a.c_str(), b.c_str()));
+#endif
+        }
+        SECTION("istarts_with(B, A) == true")
+        {
+            REQUIRE(nfixture::istarts_with(b.c_str(), a.c_str()));
+#ifdef HAS_BOOST
+            REQUIRE(boost::istarts_with(b.c_str(), a.c_str()));
+#endif
+        }
+    }
+
+    SECTION("A not empty and starts with B and strlen(A) > strlen(B)")
+    {
+        SECTION("istarts_with(A, B) == true")
+        {
+            REQUIRE(nfixture::istarts_with(a.c_str(), b.c_str()));
+#ifdef HAS_BOOST
+            REQUIRE(boost::istarts_with(a.c_str(), b.c_str()));
+#endif
+        }
+
+        SECTION("istarts_with(B, A) == false")
+        {
+            REQUIRE(!nfixture::istarts_with(b.c_str(), a.c_str()));
+#ifdef HAS_BOOST
+            REQUIRE(!boost::istarts_with(b.c_str(), a.c_str()));
+#endif
+        }
+    }
+
+    SECTION("A not empty and not starts with B and strlen(A) > strlen(B)")
+    {
+        b.assign(b.size(), 'X');
+        SECTION("istarts_with(A, B) == false")
+        {
+            REQUIRE(!nfixture::istarts_with(a.c_str(), b.c_str()));
+#ifdef HAS_BOOST
+            REQUIRE(!boost::istarts_with(a.c_str(), b.c_str()));
+#endif
+        }
+    }
+
+    SECTION("A not empty and not starts with B and strlen(B) > strlen(A)")
+    {
+        b.assign(a.size() * 3, 'X');
+        SECTION("istarts_with(A, B) == false")
+        {
+            REQUIRE(!nfixture::istarts_with(b.c_str(), a.c_str()));
+#ifdef HAS_BOOST
+            REQUIRE(!boost::istarts_with(b.c_str(), a.c_str()));
+#endif
+        }
+    }
+}
+
+TEST_CASE("iends_with(char* A, char* B)")
+{
+    nfixture::string a{"something1something2"};
+    nfixture::string b{"SOMETHING2"};
+
+    SECTION("A and B are empty")
+    {
+        a.clear();
+        b.clear();
+
+        SECTION("iends_with(A, B) == true")
+        {
+            REQUIRE(nfixture::iends_with(a.c_str(), b.c_str()));
+#ifdef HAS_BOOST
+            REQUIRE(boost::iends_with(a.c_str(), b.c_str()));
+#endif
+        }
+
+        SECTION("iends_with(B, A) == true")
+        {
+            REQUIRE(nfixture::iends_with(b.c_str(), a.c_str()));
+#ifdef HAS_BOOST
+            REQUIRE(boost::iends_with(b.c_str(), a.c_str()));
+#endif
+        }
+    }
+
+    SECTION("A is empty and B is not empty")
+    {
+        a.clear();
+
+        SECTION("iends_with(A, B) == false")
+        {
+            REQUIRE(!nfixture::istarts_with(a.c_str(), b.c_str()));
+#ifdef HAS_BOOST
+            REQUIRE(!boost::istarts_with(a.c_str(), b.c_str()));
+#endif
+        }
+
+        SECTION("iends_with(B, A) == true")
+        {
+            REQUIRE(nfixture::istarts_with(b.c_str(), a.c_str()));
+#ifdef HAS_BOOST
+            REQUIRE(boost::istarts_with(b.c_str(), a.c_str()));
+#endif
+        }
+    }
+
+    SECTION("A not empty and A == B")
+    {
+        b = a;
+
+        SECTION("istarts_with(A, B) == true")
+        {
+            REQUIRE(nfixture::iends_with(a.c_str(), b.c_str()));
+#ifdef HAS_BOOST
+            REQUIRE(boost::iends_with(a.c_str(), b.c_str()));
+#endif
+        }
+        SECTION("istarts_with(B, A) == true")
+        {
+            REQUIRE(nfixture::iends_with(b.c_str(), a.c_str()));
+#ifdef HAS_BOOST
+            REQUIRE(boost::iends_with(b.c_str(), a.c_str()));
+#endif
+        }
+    }
+
+    SECTION("A not empty and ends with B and strlen(A) > strlen(B)")
+    {
+        SECTION("iends_with(A, B) == true")
+        {
+            REQUIRE(nfixture::iends_with(a.c_str(), b.c_str()));
+#ifdef HAS_BOOST
+            REQUIRE(boost::iends_with(a.c_str(), b.c_str()));
+#endif
+        }
+
+        SECTION("iends_with(B, A) == false")
+        {
+            REQUIRE(!nfixture::iends_with(b.c_str(), a.c_str()));
+#ifdef HAS_BOOST
+            REQUIRE(!boost::iends_with(b.c_str(), a.c_str()));
+#endif
+        }
+    }
+
+    SECTION("A not empty and not ends with B and strlen(A) > strlen(B)")
+    {
+        b.assign(b.size(), 'X');
+        SECTION("iends_with(A, B) == false")
+        {
+            REQUIRE(!nfixture::iends_with(a.c_str(), b.c_str()));
+#ifdef HAS_BOOST
+            REQUIRE(!boost::iends_with(a.c_str(), b.c_str()));
+#endif
+        }
+    }
+
+    SECTION("A not empty and not ends with B and strlen(B) > strlen(A)")
+    {
+        b.assign(a.size() * 3, 'X');
+
+        SECTION("iends_with(A, B) == false")
+        {
+            REQUIRE(!nfixture::iends_with(b.c_str(), a.c_str()));
+#ifdef HAS_BOOST
+            REQUIRE(!boost::iends_with(b.c_str(), a.c_str()));
+#endif
+        }
+    }
+
+}
+
+TEST_CASE("istarts_with(string A, string B)")
+{
+    nfixture::string a{"something1something2"};
+    nfixture::string b{"SOMETHING1"};
 
     SECTION("A and B are empty")
     {
@@ -76,18 +303,26 @@ TEST_CASE("istarts_with(A, B)")
         }
     }
 
-    SECTION("A not empty and starts with B and strlen(A) < strlen(B)")
+    SECTION("A not empty and starts with B and strlen(A) > strlen(B)")
     {
-        SECTION("istarts_with(A, B) == false")
+        SECTION("istarts_with(A, B) == true")
         {
-            REQUIRE(!nfixture::istarts_with(a, b));
+            REQUIRE(nfixture::istarts_with(a, b));
 #ifdef HAS_BOOST
-            REQUIRE(!boost::istarts_with(a, b));
+            REQUIRE(boost::istarts_with(a, b));
+#endif
+        }
+
+        SECTION("istarts_with(B, A) == false")
+        {
+            REQUIRE(!nfixture::istarts_with(b, a));
+#ifdef HAS_BOOST
+            REQUIRE(!boost::istarts_with(b, a));
 #endif
         }
     }
 
-    SECTION("A not empty and not starts with B and strlen(A) < strlen(B)")
+    SECTION("A not empty and not starts with B and strlen(A) > strlen(B)")
     {
         b.assign(b.size(), 'X');
         SECTION("istarts_with(A, B) == false")
@@ -99,9 +334,59 @@ TEST_CASE("istarts_with(A, B)")
         }
     }
 
-    SECTION("B not empty and starts with A and strlen(B) > strlen(A)")
+    SECTION("A not empty and not starts with B and strlen(B) > strlen(A)")
     {
-        SECTION("istarts_with(B, A) == true")
+        b.assign(a.size() * 3, 'X');
+        SECTION("istarts_with(A, B) == false")
+        {
+            REQUIRE(!nfixture::istarts_with(b, a));
+#ifdef HAS_BOOST
+            REQUIRE(!boost::istarts_with(b, a));
+#endif
+        }
+    }
+}
+
+TEST_CASE("iends_with(string A, string B)")
+{
+    nfixture::string a{"something1something2"};
+    nfixture::string b{"SOMETHING2"};
+
+    SECTION("A and B are empty")
+    {
+        a.clear();
+        b.clear();
+
+        SECTION("iends_with(A, B) == true")
+        {
+            REQUIRE(nfixture::iends_with(a, b));
+#ifdef HAS_BOOST
+            REQUIRE(boost::iends_with(a, b));
+#endif
+        }
+
+        SECTION("iends_with(B, A) == true")
+        {
+            REQUIRE(nfixture::iends_with(b, a));
+#ifdef HAS_BOOST
+            REQUIRE(boost::iends_with(b, a));
+#endif
+        }
+    }
+
+    SECTION("A is empty and B is not empty")
+    {
+        a.clear();
+
+        SECTION("iends_with(A, B) == false")
+        {
+            REQUIRE(!nfixture::istarts_with(a, b));
+#ifdef HAS_BOOST
+            REQUIRE(!boost::istarts_with(a, b));
+#endif
+        }
+
+        SECTION("iends_with(B, A) == true")
         {
             REQUIRE(nfixture::istarts_with(b, a));
 #ifdef HAS_BOOST
@@ -110,15 +395,68 @@ TEST_CASE("istarts_with(A, B)")
         }
     }
 
-    SECTION("B not empty and not starts with A and strlen(B) > strlen(A)")
+    SECTION("A not empty and A == B")
     {
-        a.assign(a.size(), 'X');
-        SECTION("istarts_with(B, A) == false")
+        b = a;
+
+        SECTION("istarts_with(A, B) == true")
         {
-            REQUIRE(!nfixture::istarts_with(b, a));
+            REQUIRE(nfixture::iends_with(a, b));
 #ifdef HAS_BOOST
-            REQUIRE(!boost::istarts_with(b, a));
+            REQUIRE(boost::iends_with(a, b));
+#endif
+        }
+        SECTION("istarts_with(B, A) == true")
+        {
+            REQUIRE(nfixture::iends_with(b, a));
+#ifdef HAS_BOOST
+            REQUIRE(boost::iends_with(b, a));
 #endif
         }
     }
+
+    SECTION("A not empty and ends with B and strlen(A) > strlen(B)")
+    {
+        SECTION("iends_with(A, B) == true")
+        {
+            REQUIRE(nfixture::iends_with(a, b));
+#ifdef HAS_BOOST
+            REQUIRE(boost::iends_with(a, b));
+#endif
+        }
+
+        SECTION("iends_with(B, A) == false")
+        {
+            REQUIRE(!nfixture::iends_with(b, a));
+#ifdef HAS_BOOST
+            REQUIRE(!boost::iends_with(b, a));
+#endif
+        }
+    }
+
+    SECTION("A not empty and not ends with B and strlen(A) > strlen(B)")
+    {
+        b.assign(b.size(), 'X');
+        SECTION("iends_with(A, B) == false")
+        {
+            REQUIRE(!nfixture::iends_with(a, b));
+#ifdef HAS_BOOST
+            REQUIRE(!boost::iends_with(a, b));
+#endif
+        }
+    }
+
+    SECTION("A not empty and not ends with B and strlen(B) > strlen(A)")
+    {
+        b.assign(a.size() * 3, 'X');
+
+        SECTION("iends_with(A, B) == false")
+        {
+            REQUIRE(!nfixture::iends_with(b, a));
+#ifdef HAS_BOOST
+            REQUIRE(!boost::iends_with(b, a));
+#endif
+        }
+    }
+
 }
