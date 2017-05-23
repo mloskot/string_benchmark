@@ -20,6 +20,10 @@ See Travis CI and AppVeyor build logs.
 
 ![istarts_with chart](chart_istarts_with.png)
 
+### `iends_with`
+
+![iends_with chart](chart_iends_with.png)
+
 ## Usage
 
 Build and run the benchmark with:
