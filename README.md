@@ -16,6 +16,10 @@ The benchmark uses [Celero](https://github.com/DigitalInBlue/Celero) library.
 
 See Travis CI and AppVeyor build logs.
 
+### `istarts_with`
+
+![istarts_with chart](chart_istarts_with.png)
+
 ## Usage
 
 Build and run the benchmark with:
