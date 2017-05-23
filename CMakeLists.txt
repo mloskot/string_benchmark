@@ -11,6 +11,14 @@ if(NOT CMAKE_BUILD_TYPE)
     message(STATUS "Configuring default CMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}")
 endif()
 
+if(WIN32)
+  set(CMAKE_DEBUG_POSTFIX d)
+endif()
+if(CMAKE_BUILD_TYPE MATCHES "Release")
+  set(CMAKE_BUILD_POSTFIX "${CMAKE_RELEASE_POSTFIX}")
+endif()
+
+
 if(CMAKE_CXX_COMPILER_ID STREQUAL "Clang" OR CMAKE_COMPILER_IS_GNUCXX)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Werror")
     include(CheckCXXCompilerFlag)
@@ -58,7 +66,6 @@ ExternalProject_Get_Property(catch SOURCE_DIR)
 include_directories(${SOURCE_DIR}/include)
 
 message(STATUS "Configuring Celero")
-message(STATUS "CMAKE_ARGS = ${CMAKE_ARGS}")
 ExternalProject_Add(
     celero
     GIT_REPOSITORY https://github.com/DigitalInBlue/Celero.git
@@ -82,15 +89,6 @@ if(MSVC)
 endif()
 add_dependencies(libcelero celero)
 
-set(tests test_fixture)
-foreach(test ${tests})
-  message(STATUS "Configuring test: ${test}")
-  add_executable(${test} ${test}.cpp)
-  add_dependencies(${test} catch)
-  add_test(NAME ${test} COMMAND ${test})
-  add_custom_target(run_${test} ALL $<TARGET_FILE:${test}> DEPENDS ${test})
-endforeach()
-
 file(GLOB headers *.hpp)
 file(GLOB sources fixture.cpp)
 set(benchmarks benchmark_istarts_with)
@@ -101,4 +99,13 @@ foreach(benchmark ${benchmarks})
   add_dependencies(${benchmark} libcelero)
   target_link_libraries(${benchmark} libcelero ${CELERO_EXTRA_LIBS})
   add_custom_target(run_${benchmark} ALL $<TARGET_FILE:${benchmark}> DEPENDS ${benchmark})
+endforeach()
+
+set(tests test_fixture)
+foreach(test ${tests})
+  message(STATUS "Configuring test: ${test}")
+  add_executable(${test} ${test}.cpp)
+  add_dependencies(${test} catch libcelero)
+  add_test(NAME ${test} COMMAND ${test})
+  add_custom_target(run_${test} ALL $<TARGET_FILE:${test}> DEPENDS ${test})
 endforeach()
