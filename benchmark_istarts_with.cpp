@@ -9,7 +9,7 @@
 
 CELERO_MAIN
 
-STRING_BASELINE(istarts_with, strnicmp, char)
+STRING_BASELINE(istarts_with, strnicmp)
 {
     celero::DoNotOptimizeAway(fixture::strnicmp(s1.c_str(), s2.c_str(), s1.size()));
 
@@ -17,36 +17,14 @@ STRING_BASELINE(istarts_with, strnicmp, char)
     assert(fixture::strnicmp(s1.c_str(), s2.c_str(), s1.size()) == 0);
 }
 
-STRING_BASELINE(w_istarts_with, strnicmp, wchar_t)
-{
-    celero::DoNotOptimizeAway(fixture::strnicmp(s1.c_str(), s2.c_str(), s1.size()));
-
-    assert(s1.size() == s1.size());
-    assert(fixture::strnicmp(s1.c_str(), s2.c_str(), s1.size()) == 0);
-}
-
-STRING_BENCHMARK(istarts_with, strnicmp_strlen, char)
+STRING_BENCHMARK(istarts_with, strnicmp_strlen)
 {
     celero::DoNotOptimizeAway(fixture::istarts_with(s1.c_str(), s2.c_str()));
 
     assert(fixture::istarts_with(s1.c_str(), s2.c_str()));
 }
 
-STRING_BENCHMARK(w_istarts_with, strnicmp_strlen, wchar_t)
-{
-    celero::DoNotOptimizeAway(fixture::istarts_with(s1.c_str(), s2.c_str()));
-
-    assert(fixture::istarts_with(s1.c_str(), s2.c_str()));
-}
-
-STRING_BENCHMARK(istarts_with, strnicmp_string, char)
-{
-    celero::DoNotOptimizeAway(fixture::istarts_with(s1, s2));
-
-    assert(fixture::istarts_with(s1, s2));
-}
-
-STRING_BENCHMARK(w_istarts_with, strnicmp_string, wchar_t)
+STRING_BENCHMARK(istarts_with, strnicmp_string)
 {
     celero::DoNotOptimizeAway(fixture::istarts_with(s1, s2));
 
@@ -55,28 +33,14 @@ STRING_BENCHMARK(w_istarts_with, strnicmp_string, wchar_t)
 
 #ifdef HAS_BOOST
 
-STRING_BENCHMARK(istarts_with, boost_cstring, char)
+STRING_BENCHMARK(istarts_with, boost_cstring)
 {
     celero::DoNotOptimizeAway(boost::istarts_with(s1.c_str(), s2.c_str()));
 
     assert(boost::istarts_with(s1, s2));
 }
 
-STRING_BENCHMARK(w_istarts_with, boost_cstring, wchar_t)
-{
-    celero::DoNotOptimizeAway(boost::istarts_with(s1.c_str(), s2.c_str()));
-
-    assert(boost::istarts_with(s1, s2));
-}
-
-STRING_BENCHMARK(istarts_with, boost_string, char)
-{
-    celero::DoNotOptimizeAway(boost::istarts_with(s1, s2));
-
-    assert(boost::istarts_with(s1, s2));
-}
-
-STRING_BENCHMARK(w_istarts_with, boost_string, wchar_t)
+STRING_BENCHMARK(istarts_with, boost_string)
 {
     celero::DoNotOptimizeAway(boost::istarts_with(s1, s2));
 

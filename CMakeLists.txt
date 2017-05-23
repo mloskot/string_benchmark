@@ -1,9 +1,6 @@
 cmake_minimum_required(VERSION 2.8)
 project(string_benchmark CXX)
 
-include(ExternalProject)
-enable_testing()
-
 if(NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE "Release" CACHE STRING
         "Choose the type of build, options are: Debug Release RelWithDebInfo MinSizeRel."
@@ -44,6 +41,7 @@ message(STATUS "Boost_FOUND=${Boost_FOUND}")
 message(STATUS "Boost_INCLUDE_DIRS=${Boost_INCLUDE_DIRS}")
 
 find_package(Git REQUIRED)
+include(ExternalProject)
 
 message(STATUS "Configuring Catch")
 ExternalProject_Add(
@@ -87,16 +85,26 @@ add_dependencies(libcelero celero)
 
 file(GLOB headers *.hpp)
 file(GLOB sources fixture.cpp)
-set(benchmarks benchmark_istarts_with)
+set(benchmarks benchmark_istarts_with benchmark_iends_with)
 
 foreach(benchmark ${benchmarks})
-  message(STATUS "Configuring benchmark: ${benchmark}")
-  add_executable(${benchmark} ${benchmark}.cpp ${sources} ${headers})
-  add_dependencies(${benchmark} libcelero)
-  target_link_libraries(${benchmark} libcelero ${CELERO_EXTRA_LIBS})
-  add_custom_target(run_${benchmark} ALL $<TARGET_FILE:${benchmark}> DEPENDS ${benchmark})
+  set(btarget ${benchmark}) # benchmark char-based strings
+  message(STATUS "Configuring benchmark: ${btarget}")
+  add_executable(${btarget} ${benchmark}.cpp ${sources} ${headers})
+  add_dependencies(${btarget} libcelero)
+  target_link_libraries(${btarget} libcelero ${CELERO_EXTRA_LIBS})
+  add_custom_target(run_${btarget} ALL $<TARGET_FILE:${btarget}> DEPENDS ${btarget})
+
+  set(btarget ${benchmark}_wchar) # benchmark wchar_t-based strings
+  message(STATUS "Configuring benchmark: ${btarget}")
+  add_executable(${btarget} ${benchmark}.cpp ${sources} ${headers})
+  target_compile_definitions(${btarget} PRIVATE STRING_BENCHMARK_WCHAR=1)
+  add_dependencies(${btarget} libcelero)
+  target_link_libraries(${btarget} libcelero ${CELERO_EXTRA_LIBS})
+  add_custom_target(run_${btarget} ALL $<TARGET_FILE:${btarget}> DEPENDS ${btarget})
 endforeach()
 
+enable_testing()
 set(tests test_fixture)
 foreach(test ${tests})
   message(STATUS "Configuring test: ${test}")

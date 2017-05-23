@@ -13,6 +13,14 @@
 #include <cassert>
 #endif
 
+#ifdef STRING_BENCHMARK_WCHAR
+#define STRING_CHAR_TYPE wchar_t
+#define GROUP_NAME(group_name) w_ ## group_name
+#else
+#define STRING_CHAR_TYPE char
+#define GROUP_NAME(group_name) group_name
+#endif
+
 namespace string_benchmark
 {
 namespace config
@@ -31,14 +39,14 @@ enum { samples = 1, iterations = 10 };
 template <typename T>
 inline constexpr void ignore_unused(T const&) {}
 
-#define STRING_BASELINE(group_name, benchmark_name, char_type) \
-    BASELINE_F(group_name, benchmark_name, \
-        string_benchmark::data_fixture<char_type>, \
+#define STRING_BASELINE(group_name, benchmark_name) \
+    BASELINE_F(GROUP_NAME(group_name), benchmark_name, \
+        string_benchmark::data_fixture<STRING_CHAR_TYPE>, \
         (string_benchmark::config::samples), \
         (string_benchmark::config::iterations))
 
-#define STRING_BENCHMARK(group_name, benchmark_name, char_type) \
-    BENCHMARK_F(group_name, benchmark_name, \
-        string_benchmark::data_fixture<char_type>, \
+#define STRING_BENCHMARK(group_name, benchmark_name) \
+    BENCHMARK_F(GROUP_NAME(group_name), benchmark_name, \
+        string_benchmark::data_fixture<STRING_CHAR_TYPE>, \
         (string_benchmark::config::samples), \
         (string_benchmark::config::iterations))
