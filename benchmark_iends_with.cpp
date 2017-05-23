@@ -17,7 +17,7 @@ STRING_BASELINE(iends_with, strnicmp)
     assert(fixture::strnicmp(s1.c_str(), s2.c_str(), s1.size()) == 0);
 }
 
-STRING_BENCHMARK(iends_with, strnicmp_strlen)
+STRING_BENCHMARK(iends_with, strnicmp_cstring)
 {
     celero::DoNotOptimizeAway(fixture::iends_with(s1.c_str(), s2.c_str()));
 
