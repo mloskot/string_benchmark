@@ -47,60 +47,46 @@ find_package(Git REQUIRED)
 
 message(STATUS "Configuring Catch")
 ExternalProject_Add(
-  dep_catch
-  PREFIX ${CMAKE_BINARY_DIR}/catch
+  catch
   GIT_REPOSITORY https://github.com/philsquared/Catch.git
-  GIT_TAG master
-  TIMEOUT 10
   UPDATE_COMMAND ""
   CONFIGURE_COMMAND ""
   BUILD_COMMAND ""
   INSTALL_COMMAND ""
   LOG_DOWNLOAD ON)
-ExternalProject_Get_Property(dep_catch SOURCE_DIR)
-set(CATCH_INCLUDE_DIR ${SOURCE_DIR}/include CACHE INTERNAL "Path to Catch include directory")
-include_directories(${CATCH_INCLUDE_DIR})
-message(STATUS "CATCH_INCLUDE_DIR=${CATCH_INCLUDE_DIR}")
+ExternalProject_Get_Property(catch SOURCE_DIR)
+include_directories(${SOURCE_DIR}/include)
 
 message(STATUS "Configuring Celero")
-set (CELERO_PREFIX ${CMAKE_BINARY_DIR}/celero)
-set (CELERO_INSTALL_PREFIX ${CELERO_PREFIX}/install)
+message(STATUS "CMAKE_ARGS = ${CMAKE_ARGS}")
 ExternalProject_Add(
-    dep_celero
-    PREFIX ${CELERO_PREFIX}
+    celero
     GIT_REPOSITORY https://github.com/DigitalInBlue/Celero.git
-    GIT_TAG master
-    TIMEOUT 10
     UPDATE_COMMAND ""
-    BINARY_DIR ${CELERO_PREFIX}/build
+    INSTALL_DIR ${CMAKE_BINARY_DIR}
     CMAKE_ARGS
-      -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
-      -DCMAKE_INSTALL_PREFIX=${CELERO_INSTALL_PREFIX}
+      -DCMAKE_BUILD_TYPE:STRING=${CMAKE_BUILD_TYPE}
+      -DCMAKE_INSTALL_PREFIX:STRING=${CMAKE_BINARY_DIR}
       -DCELERO_COMPILE_DYNAMIC_LIBRARIES:BOOL=OFF
       -DCELERO_ENABLE_EXPERIMENTS:BOOL=OFF
-      -DCELERO_ENABLE_FOLDERS:BOOL=OFF
-    BUILD_COMMAND "${CMAKE_COMMAND}" --build ${CELERO_PREFIX}/build --config ${CMAKE_BUILD_TYPE}
-)
-message(STATUS "CELERO_PREFIX=${CELERO_PREFIX}")
-message(STATUS "CELERO_INSTALL_PREFIX=${CELERO_INSTALL_PREFIX}")
-add_library(celero STATIC IMPORTED)
-add_dependencies(celero dep_celero)
-include_directories(${CELERO_INSTALL_PREFIX}/include)
-if(UNIX)
-  set_target_properties(celero PROPERTIES
-    IMPORTED_LOCATION "${CELERO_INSTALL_PREFIX}/lib/libcelero.a")
-elseif(MSVC)
-  set_target_properties(celero PROPERTIES
-    IMPORTED_LOCATION_Debug "${CELERO_INSTALL_PREFIX}/lib/celerod.lib"
-    IMPORTED_LOCATION_Release "${CELERO_INSTALL_PREFIX}/lib/celero.lib")
+      -DCELERO_ENABLE_FOLDERS:BOOL=OFF)
+ExternalProject_Get_Property(celero SOURCE_DIR)
+ExternalProject_Get_Property(celero INSTALL_DIR)
+add_library(libcelero UNKNOWN IMPORTED)
+include_directories(${INSTALL_DIR}/include)
+set_property(TARGET libcelero
+  PROPERTY
+  IMPORTED_LOCATION "${INSTALL_DIR}/lib/${CMAKE_STATIC_LIBRARY_PREFIX}celero${CMAKE_DEBUG_POSTFIX}${CMAKE_STATIC_LIBRARY_SUFFIX}")
+if(MSVC)
   set(CELERO_EXTRA_LIBS PowrProf.lib)
 endif()
+add_dependencies(libcelero celero)
 
 set(tests test_fixture)
 foreach(test ${tests})
   message(STATUS "Configuring test: ${test}")
   add_executable(${test} ${test}.cpp)
-  add_dependencies(${test} dep_catch)
+  add_dependencies(${test} catch)
   add_test(NAME ${test} COMMAND ${test})
   add_custom_target(run_${test} ALL $<TARGET_FILE:${test}> DEPENDS ${test})
 endforeach()
@@ -112,7 +98,7 @@ set(benchmarks benchmark_istarts_with)
 foreach(benchmark ${benchmarks})
   message(STATUS "Configuring benchmark: ${benchmark}")
   add_executable(${benchmark} ${benchmark}.cpp ${sources} ${headers})
-  target_link_libraries(${benchmark} celero ${CELERO_EXTRA_LIBS})
-  add_dependencies(${benchmark} celero)
+  add_dependencies(${benchmark} libcelero)
+  target_link_libraries(${benchmark} libcelero ${CELERO_EXTRA_LIBS})
   add_custom_target(run_${benchmark} ALL $<TARGET_FILE:${benchmark}> DEPENDS ${benchmark})
 endforeach()
