@@ -98,7 +98,7 @@ foreach(benchmark ${benchmarks})
   set(btarget ${benchmark}_wchar) # benchmark wchar_t-based strings
   message(STATUS "Configuring benchmark: ${btarget}")
   add_executable(${btarget} ${benchmark}.cpp ${sources} ${headers})
-  target_compile_definitions(${btarget} PRIVATE STRING_BENCHMARK_WCHAR=1)
+  set_property(TARGET ${btarget} PROPERTY COMPILE_DEFINITIONS STRING_BENCHMARK_WCHAR=1)
   add_dependencies(${btarget} libcelero)
   target_link_libraries(${btarget} libcelero ${CELERO_EXTRA_LIBS})
   add_custom_target(run_${btarget} ALL $<TARGET_FILE:${btarget}> DEPENDS ${btarget})
