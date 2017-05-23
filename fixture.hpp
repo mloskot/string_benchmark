@@ -47,6 +47,21 @@ struct base_string_fixture
     using string = std::basic_string<Char, std::char_traits<Char>>;
     using fixture = Fixture<Char>;
 
+    static bool istarts_with(Char const* const s, Char const* const n)
+    {
+        auto const s_len = fixture::strlen(s);
+        auto const n_len = fixture::strlen(n);
+        if (s_len < n_len)
+            return false;
+
+        return fixture::strnicmp(s, n, n_len) == 0;
+    }
+
+    static bool istarts_with(string const& s, string const& n)
+    {
+        return istarts_with(s.c_str(), n.c_str());
+    }
+
     static void sprintf_v(string& dst, Char const* const fmt, va_list args)
     {
         va_list args2;
