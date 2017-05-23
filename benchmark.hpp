@@ -10,10 +10,6 @@
 #endif
 
 #ifndef NDEBUG
-#define STRING_BENCHMARK_ENABLE_ASSERT
-#endif
-
-#ifdef STRING_BENCHMARK_ENABLE_ASSERT
 #include <cassert>
 #endif
 

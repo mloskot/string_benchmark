@@ -11,66 +11,48 @@ CELERO_MAIN
 
 STRING_BASELINE(istarts_with, strnicmp, char)
 {
-    auto const r = fixture::strnicmp(s1.c_str(), s2.c_str(), s1.size());
-    ignore_unused(r);
+    celero::DoNotOptimizeAway(fixture::strnicmp(s1.c_str(), s2.c_str(), s1.size()));
 
-#ifdef STRING_BENCHMARK_ENABLE_ASSERT
     assert(s1.size() == s1.size());
-    assert(r == 0);
-#endif
+    assert(fixture::strnicmp(s1.c_str(), s2.c_str(), s1.size()) == 0);
 }
 
 STRING_BENCHMARK(istarts_with, istarts_with, char)
 {
-    auto const r = fixture::istarts_with(s1, s2);
-    ignore_unused(r);
+    celero::DoNotOptimizeAway(fixture::istarts_with(s1, s2));
 
-#ifdef STRING_BENCHMARK_ENABLE_ASSERT
-    assert(r);
-#endif
+    assert(fixture::istarts_with(s1, s2));
 }
 
 #ifdef HAS_BOOST
 STRING_BENCHMARK(istarts_with, boost, char)
 {
-    auto const r = boost::istarts_with(s1, s2);
-    ignore_unused(r);
+    celero::DoNotOptimizeAway(boost::istarts_with(s1, s2));
 
-#ifdef STRING_BENCHMARK_ENABLE_ASSERT
-    assert(r);
-#endif
+    assert(boost::istarts_with(s1, s2));
 }
 #endif // HAS_BOOST
 
 STRING_BASELINE(w_istarts_with, strnicmp, wchar_t)
 {
-    auto const r = fixture::strnicmp(s1.c_str(), s2.c_str(), s1.size());
-    ignore_unused(r);
+    celero::DoNotOptimizeAway(fixture::strnicmp(s1.c_str(), s2.c_str(), s1.size()));
 
-#ifdef STRING_BENCHMARK_ENABLE_ASSERT
     assert(s1.size() == s1.size());
-    assert(r == 0);
-#endif
+    assert(fixture::strnicmp(s1.c_str(), s2.c_str(), s1.size()) == 0);
 }
 
 STRING_BENCHMARK(w_istarts_with, istarts_with, wchar_t)
 {
-    auto const r = fixture::istarts_with(s1, s2);
-    ignore_unused(r);
+    celero::DoNotOptimizeAway(fixture::istarts_with(s1, s2));
 
-#ifdef STRING_BENCHMARK_ENABLE_ASSERT
-    assert(r);
-#endif
+    assert(fixture::istarts_with(s1, s2));
 }
 
 #ifdef HAS_BOOST
 STRING_BENCHMARK(w_istarts_with, boost, wchar_t)
 {
-    auto const r = boost::istarts_with(s1, s2);
-    ignore_unused(r);
+    celero::DoNotOptimizeAway(boost::istarts_with(s1, s2));
 
-#ifdef STRING_BENCHMARK_ENABLE_ASSERT
-    assert(r);
-#endif
+    assert(boost::istarts_with(s1, s2));
 }
 #endif // HAS_BOOST
