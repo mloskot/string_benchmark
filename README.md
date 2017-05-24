@@ -52,7 +52,7 @@ make
 
 ```
 cmake -G "Visual Studio 2015" /path/to/string_benchmark
-msbuild /p:Configuration=Release /p:Platform=Win32 string-benchmark.sln
+msbuild /p:Configuration=Release /p:Platform=Win32 string_benchmark.sln
 ```
 
 ### Run
