@@ -105,7 +105,9 @@ foreach(benchmark ${benchmarks})
   add_executable(${btarget} ${benchmark}.cpp ${sources} ${headers})
   add_dependencies(${btarget} libcelero)
   target_link_libraries(${btarget} libcelero ${CELERO_EXTRA_LIBS})
-  add_custom_target(run_${btarget} ALL $<TARGET_FILE:${btarget}> DEPENDS run_${test} ${btarget})
+  add_custom_target(run_${btarget} ALL
+    COMMAND ${btarget} ARGS -t ${btarget}.csv
+    DEPENDS run_${test} ${btarget})
 
   set(btarget ${benchmark}_wchar) # benchmark wchar_t-based strings
   message(STATUS "Configuring benchmark: ${btarget}")
