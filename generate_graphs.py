@@ -7,7 +7,7 @@ License: http://unlicense.org
 import csv
 import os
 import sys
-from bokeh.charts import Bar, output_file, show
+from bokeh.charts import Area, Bar, Line, output_file, show
 
 def read_number(string_value):
     """Reads string as float or int"""
@@ -56,15 +56,29 @@ def read_results(csv_file):
 
 def generate_report(data):
     """Plots graphs with benchmark results."""
+    assert len(data) == 1
     for group_name, group in data.items():
-
-        data = {}
-        x_labels = None
+        sizes = []
+        experiments = []
+        measures = []
         for experiment_name, experiment in group['experiments'].items():
-            if not x_labels:
-                x_labels = experiment['problem space']
-            data[experiment_name] = experiment['baseline']
-        plot = Bar(data)
+            measures_count = len(experiment['problem space'])
+            assert measures_count == len(experiment['baseline'])
+            experiments.extend([experiment_name] * measures_count)
+            sizes.extend(experiment['problem space'])
+            measures.extend(experiment['baseline'])
+        assert len(sizes) == len(experiments) == len(measures)
+        data = {
+            'size': sizes,
+            'experiment': experiments,
+            'baseline': measures
+        }
+
+        plot = Bar(data, label='size', group='experiment', values='baseline',
+                   legend='top_left', bar_width=10,
+                   title='Benchmark results for ' + group_name,
+                   xlabel='Problem space (size of input)',
+                   ylabel='Baseline')
 
         report_file = 'benchmark_{0}.html'.format(group_name)
         output_file(report_file)
