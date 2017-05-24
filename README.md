@@ -4,7 +4,9 @@ Simple non-academic performance comparison of various operations on C++ strings:
 C strings, character arrays, `std::string` and `std::wstring` classes
 as well as some of the Boost string algorithms.
 
-The benchmark uses [Celero](https://github.com/DigitalInBlue/Celero) library.
+The benchmarks use [Celero](https://github.com/DigitalInBlue/Celero) library.
+
+The tests use [Catch](https://github.com/philsquared/Catch/).
 
 ## Build Status
 
