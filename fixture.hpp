@@ -5,6 +5,7 @@
 #include <cstdarg>
 #include <cstdio>
 #include <cstring>
+#include <cwchar>
 #include <random>
 #ifndef _MSC_VER
 #include <vector>
@@ -47,6 +48,41 @@ struct base_string_fixture
 {
     using string = std::basic_string<Char, std::char_traits<Char>>;
     using fixture = Fixture<Char>;
+
+    static bool starts_with(Char const* const s, Char const* const n)
+    {
+        auto const s_len = fixture::strlen(s);
+        auto const n_len = fixture::strlen(n);
+        if (s_len < n_len)
+            return false;
+        return fixture::strncmp(s, n, n_len) == 0;
+    }
+
+    static bool starts_with(string const& s, string const& n)
+    {
+        auto const n_len = n.length();
+        if (s.length() < n_len)
+            return false;
+        return fixture::strncmp(s.c_str(), n.c_str(), n_len) == 0;
+    }
+
+    static bool ends_with(Char const* const s, Char const* const n)
+    {
+        auto const s_len = fixture::strlen(s);
+        auto const n_len = fixture::strlen(n);
+        if (s_len < n_len)
+            return false;
+        return fixture::strncmp(s + (s_len - n_len), n, n_len) == 0;
+    }
+
+    static bool ends_with(string const& s, string const& n)
+    {
+        auto const s_len = s.length();
+        auto const n_len = n.length();
+        if (s_len < n_len)
+            return false;
+        return fixture::strncmp(s.c_str() + (s_len - n_len), n.c_str(), n_len) == 0;
+    }
 
     static bool istarts_with(Char const* const s, Char const* const n)
     {
@@ -129,6 +165,11 @@ struct string_fixture<char> : public base_string_fixture<char, string_fixture>
         return n10string_samples;
     }
 
+    static auto strncmp(char const* const lhs, char const* const rhs, std::size_t count) -> int
+    {
+        return std::strncmp(lhs, rhs, count);
+    }
+
     static auto strnicmp(char const* const lhs, char const* const rhs, std::size_t count) -> int
     {
 #ifdef _MSC_VER
@@ -180,6 +221,11 @@ struct string_fixture<wchar_t> : public base_string_fixture<wchar_t, string_fixt
     static auto samples() -> w10strings const&
     {
         return w10string_samples;
+    }
+
+    static auto strncmp(wchar_t const* const lhs, wchar_t const* const rhs, std::size_t count) -> int
+    {
+        return std::wcsncmp(lhs, rhs, count);
     }
 
     static auto strnicmp(wchar_t const* const lhs, wchar_t const* const rhs, std::size_t count) -> int
@@ -239,18 +285,35 @@ struct string_fixture<wchar_t> : public base_string_fixture<wchar_t, string_fixt
 };
 
 template <typename Char>
-inline auto random_string(std::size_t size) -> typename string_fixture<Char>::string
+inline auto make_random_string(std::size_t size, std::basic_string<Char> const& alphabet) -> std::basic_string<Char>
 {
-    using string = typename string_fixture<Char>::string;
-
-    string alphabet; alphabet.reserve('z' - 'a' + 1);
-    for (Char c = 'a'; c <= 'z'; ++c)
-        alphabet.push_back(c);
     std::mt19937_64 gen{std::random_device()()};
     std::uniform_int_distribution<size_t> dist{0, alphabet.length() - 1};
-    string ret;
+    std::basic_string<Char> ret;
     std::generate_n(std::back_inserter(ret), size, [&] { return alphabet[dist(gen)]; });
     return ret;
+}
+
+template <typename Char>
+inline auto random_istring(std::size_t size) -> std::basic_string<Char>
+{
+    std::basic_string<Char> alphabet;
+    alphabet.reserve(('Z' - 'A') + ('z' - 'a')+ 1);
+    for (Char c = 'a'; c <= 'z'; ++c)
+        alphabet.push_back(c);
+    for (Char c = 'A'; c <= 'Z'; ++c)
+        alphabet.push_back(c);
+    return make_random_string(size, alphabet);
+}
+
+template <typename Char>
+inline auto random_string(std::size_t size) -> std::basic_string<Char>
+{
+    std::basic_string<Char> alphabet;
+    alphabet.reserve(('z' - 'a')+ 1);
+    for (Char c = 'a'; c <= 'z'; ++c)
+        alphabet.push_back(c);
+    return make_random_string(size, alphabet);
 }
 
 template <typename Char>
@@ -260,6 +323,8 @@ struct  data_fixture : celero::TestFixture
     using string = std::basic_string<Char>;
     string s1;
     string s2;
+    string si1; // case-insensitive
+    string si2; // case-insensitive
 
     auto getExperimentValues() const -> std::vector<std::pair<int64_t, uint64_t>>
     {
@@ -277,6 +342,7 @@ struct  data_fixture : celero::TestFixture
     {
         auto const size = static_cast<std::size_t>(experimentValue);
         s1 = s2 = random_string<Char>(size);
+        si1 = si2 = random_istring<Char>(size);
     }
 };
 
