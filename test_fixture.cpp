@@ -155,17 +155,17 @@ TEST_CASE("ends_with(char* A, char* B)")
 
         SECTION("ends_with(A, B) == false")
         {
-            REQUIRE(!nfixture::starts_with(a.c_str(), b.c_str()));
+            REQUIRE(!nfixture::ends_with(a.c_str(), b.c_str()));
 #ifdef HAS_BOOST
-            REQUIRE(!boost::starts_with(a.c_str(), b.c_str()));
+            REQUIRE(!boost::ends_with(a.c_str(), b.c_str()));
 #endif
         }
 
         SECTION("ends_with(B, A) == true")
         {
-            REQUIRE(nfixture::starts_with(b.c_str(), a.c_str()));
+            REQUIRE(nfixture::ends_with(b.c_str(), a.c_str()));
 #ifdef HAS_BOOST
-            REQUIRE(boost::starts_with(b.c_str(), a.c_str()));
+            REQUIRE(boost::ends_with(b.c_str(), a.c_str()));
 #endif
         }
     }
@@ -174,14 +174,14 @@ TEST_CASE("ends_with(char* A, char* B)")
     {
         b = a;
 
-        SECTION("starts_with(A, B) == true")
+        SECTION("ends_with(A, B) == true")
         {
             REQUIRE(nfixture::ends_with(a.c_str(), b.c_str()));
 #ifdef HAS_BOOST
             REQUIRE(boost::ends_with(a.c_str(), b.c_str()));
 #endif
         }
-        SECTION("starts_with(B, A) == true")
+        SECTION("ends_with(B, A) == true")
         {
             REQUIRE(nfixture::ends_with(b.c_str(), a.c_str()));
 #ifdef HAS_BOOST
@@ -381,17 +381,17 @@ TEST_CASE("ends_with(string A, string B)")
 
         SECTION("ends_with(A, B) == false")
         {
-            REQUIRE(!nfixture::starts_with(a, b));
+            REQUIRE(!nfixture::ends_with(a, b));
 #ifdef HAS_BOOST
-            REQUIRE(!boost::starts_with(a, b));
+            REQUIRE(!boost::ends_with(a, b));
 #endif
         }
 
         SECTION("ends_with(B, A) == true")
         {
-            REQUIRE(nfixture::starts_with(b, a));
+            REQUIRE(nfixture::ends_with(b, a));
 #ifdef HAS_BOOST
-            REQUIRE(boost::starts_with(b, a));
+            REQUIRE(boost::ends_with(b, a));
 #endif
         }
     }
@@ -400,14 +400,14 @@ TEST_CASE("ends_with(string A, string B)")
     {
         b = a;
 
-        SECTION("starts_with(A, B) == true")
+        SECTION("ends_with(A, B) == true")
         {
             REQUIRE(nfixture::ends_with(a, b));
 #ifdef HAS_BOOST
             REQUIRE(boost::ends_with(a, b));
 #endif
         }
-        SECTION("starts_with(B, A) == true")
+        SECTION("ends_with(B, A) == true")
         {
             REQUIRE(nfixture::ends_with(b, a));
 #ifdef HAS_BOOST
@@ -607,17 +607,17 @@ TEST_CASE("iends_with(char* A, char* B)")
 
         SECTION("iends_with(A, B) == false")
         {
-            REQUIRE(!nfixture::istarts_with(a.c_str(), b.c_str()));
+            REQUIRE(!nfixture::iends_with(a.c_str(), b.c_str()));
 #ifdef HAS_BOOST
-            REQUIRE(!boost::istarts_with(a.c_str(), b.c_str()));
+            REQUIRE(!boost::iends_with(a.c_str(), b.c_str()));
 #endif
         }
 
         SECTION("iends_with(B, A) == true")
         {
-            REQUIRE(nfixture::istarts_with(b.c_str(), a.c_str()));
+            REQUIRE(nfixture::iends_with(b.c_str(), a.c_str()));
 #ifdef HAS_BOOST
-            REQUIRE(boost::istarts_with(b.c_str(), a.c_str()));
+            REQUIRE(boost::iends_with(b.c_str(), a.c_str()));
 #endif
         }
     }
@@ -626,14 +626,14 @@ TEST_CASE("iends_with(char* A, char* B)")
     {
         b = a;
 
-        SECTION("istarts_with(A, B) == true")
+        SECTION("iends_with(A, B) == true")
         {
             REQUIRE(nfixture::iends_with(a.c_str(), b.c_str()));
 #ifdef HAS_BOOST
             REQUIRE(boost::iends_with(a.c_str(), b.c_str()));
 #endif
         }
-        SECTION("istarts_with(B, A) == true")
+        SECTION("iends_with(B, A) == true")
         {
             REQUIRE(nfixture::iends_with(b.c_str(), a.c_str()));
 #ifdef HAS_BOOST
@@ -833,17 +833,17 @@ TEST_CASE("iends_with(string A, string B)")
 
         SECTION("iends_with(A, B) == false")
         {
-            REQUIRE(!nfixture::istarts_with(a, b));
+            REQUIRE(!nfixture::iends_with(a, b));
 #ifdef HAS_BOOST
-            REQUIRE(!boost::istarts_with(a, b));
+            REQUIRE(!boost::iends_with(a, b));
 #endif
         }
 
         SECTION("iends_with(B, A) == true")
         {
-            REQUIRE(nfixture::istarts_with(b, a));
+            REQUIRE(nfixture::iends_with(b, a));
 #ifdef HAS_BOOST
-            REQUIRE(boost::istarts_with(b, a));
+            REQUIRE(boost::iends_with(b, a));
 #endif
         }
     }
@@ -852,14 +852,14 @@ TEST_CASE("iends_with(string A, string B)")
     {
         b = a;
 
-        SECTION("istarts_with(A, B) == true")
+        SECTION("iends_with(A, B) == true")
         {
             REQUIRE(nfixture::iends_with(a, b));
 #ifdef HAS_BOOST
             REQUIRE(boost::iends_with(a, b));
 #endif
         }
-        SECTION("istarts_with(B, A) == true")
+        SECTION("iends_with(B, A) == true")
         {
             REQUIRE(nfixture::iends_with(b, a));
 #ifdef HAS_BOOST
