@@ -17,14 +17,14 @@ STRING_BASELINE(ends_with, strncmp)
     assert(fixture::strncmp(s1.c_str(), s2.c_str(), s1.size()) == 0);
 }
 
-STRING_BENCHMARK(ends_with, strnicmp_cstring)
+STRING_BENCHMARK(ends_with, strnicmp_cstr)
 {
     celero::DoNotOptimizeAway(fixture::ends_with(s1.c_str(), s2.c_str()));
 
     assert(fixture::ends_with(s1.c_str(), s2.c_str()));
 }
 
-STRING_BENCHMARK(ends_with, strnicmp_string)
+STRING_BENCHMARK(ends_with, strnicmp_stdstr)
 {
     celero::DoNotOptimizeAway(fixture::ends_with(s1, s2));
 
@@ -33,14 +33,14 @@ STRING_BENCHMARK(ends_with, strnicmp_string)
 
 #ifdef HAS_BOOST
 
-STRING_BENCHMARK(ends_with, boost_cstring)
+STRING_BENCHMARK(ends_with, boost_cstr)
 {
     celero::DoNotOptimizeAway(boost::ends_with(s1.c_str(), s2.c_str()));
 
     assert(boost::ends_with(s1, s2));
 }
 
-STRING_BENCHMARK(ends_with, boost_string)
+STRING_BENCHMARK(ends_with, boost_stdstr)
 {
     celero::DoNotOptimizeAway(boost::ends_with(s1, s2));
 
