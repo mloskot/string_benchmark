@@ -16,14 +16,12 @@ The tests use [Catch](https://github.com/philsquared/Catch/).
 
 ## Results
 
+See [charts](https://mloskot.github.io/string_benchmark/results) generate with [Bokeh](http://bokeh.pydata.org/).
+
 Detailed results are displayed in tabular form in the
 [Travis CI](https://travis-ci.org/mloskot/string_benchmark) and
 [AppVeyor](https://ci.appveyor.com/project/mloskot/string-benchmark)
 build logs.
-
-### Reports
-
-TODO
 
 ## Usage
 
