@@ -109,7 +109,7 @@ foreach(benchmark ${benchmarks})
     COMMAND ${btarget} ARGS -t ${btarget}.csv
     DEPENDS run_${test} ${btarget})
 
-  set(btarget ${benchmark}_wchar) # benchmark wchar_t-based strings
+  string(REPLACE "benchmark_" "benchmark_w" btarget ${benchmark}) # benchmark wchar_t-based strings
   message(STATUS "Configuring benchmark: ${btarget}")
   add_executable(${btarget} ${benchmark}.cpp ${sources} ${headers})
   set_property(TARGET ${btarget} PROPERTY COMPILE_DEFINITIONS STRING_BENCHMARK_WCHAR=1)
