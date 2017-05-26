@@ -21,21 +21,9 @@ Detailed results are displayed in tabular form in the
 [AppVeyor](https://ci.appveyor.com/project/mloskot/string-benchmark)
 build logs.
 
-### `istarts_with` with GCC 4.8.4
+### Reports
 
-![istarts_with chart](results/chart_istarts_with_gcc484.png)
-
-### `istarts_with` with VS 2017
-
-![istarts_with chart](results/chart_istarts_with_vs2017.png)
-
-### `iends_with` with GCC 4.8.4
-
-![iends_with chart](results/chart_iends_with_gcc484.png)
-
-### `iends_with` with VS 2017
-
-![iends_with chart](results/chart_iends_with_vs2017.png)
+TODO
 
 ## Usage
 
@@ -51,13 +39,16 @@ make
 ### Windows
 
 ```
-cmake -G "Visual Studio 2015" /path/to/string_benchmark
-msbuild /p:Configuration=Release /p:Platform=Win32 string_benchmark.sln
+cmake -G "Visual Studio 15 2017 Win64" -DBOOST_ROOT=C:/local/boost_1_63_0 /path/to/string_benchmark
+msbuild /p:Configuration=Release /p:Platform=x64 string_benchmark.sln
 ```
 
 ### Run
 
-Note, [Celero](https://github.com/DigitalInBlue/Celero#command-line) command line options are available.
+CMake generates `RUN` target. It runs all benchmarks automatically after successful
+build and tests run, saving results in CSV files named after benchmark programs.
+
+[Celero](https://github.com/DigitalInBlue/Celero#command-line) command line options are available.
 
 ```
 benchmark_iends_with -t benchmark_iends_with.csv
@@ -65,6 +56,8 @@ benchmark_istarts_with -t benchmark_istarts_with.csv
 ```
 
 ## Credits
+
+* [John Farrier](https://github.com/DigitalInBlue/) for the Celero benchmarking library.
 
 ## Disclaimer
 
