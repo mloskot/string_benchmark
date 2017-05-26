@@ -15,7 +15,7 @@
 
 #ifdef STRING_BENCHMARK_WCHAR
 #define STRING_CHAR_TYPE wchar_t
-#define GROUP_NAME(group_name) w_ ## group_name
+#define GROUP_NAME(group_name) w ## group_name
 #else
 #define STRING_CHAR_TYPE char
 #define GROUP_NAME(group_name) group_name
