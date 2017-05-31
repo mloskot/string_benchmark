@@ -43,6 +43,58 @@ using w10strings = std::array<wchar_t const*, 10>;
 extern n10strings n10string_samples;
 extern w10strings w10string_samples;
 
+template<typename CharT>
+struct xml
+{
+    static_assert(sizeof(CharT) == -1, "CharT must be char or wchar_t");
+};
+
+template<>
+struct xml<char>
+{
+    static constexpr char const* amp                  = "&";
+    static constexpr char const* apos                 = "\'";
+    static constexpr char const* backslash            = "\\";
+    static constexpr char const* cr                   = "\r";
+    static constexpr char const* gt                   = ">";
+    static constexpr char const* lf                   = "\n";
+    static constexpr char const* lt                   = "<";
+    static constexpr char const* question             = "?";
+    static constexpr char const* quot                 = "\"";
+    static constexpr char const* tab                  = "\t";
+    static constexpr char const* entity_amp           = "&amp;";
+    static constexpr char const* entity_apos          = "&apos;";
+    static constexpr char const* entity_gt            = "&gt;";
+    static constexpr char const* entity_lt            = "&lt;";
+    static constexpr char const* entity_quot          = "&quot;";
+    static constexpr char const* entity_unknown       = "?";
+    static constexpr char const* escape_set_attribute = "\'\"&";
+    static constexpr char const* escape_set_text      = "&<>";
+};
+
+template<>
+struct xml<wchar_t>
+{
+    static constexpr wchar_t const* amp                  = L"&";
+    static constexpr wchar_t const* apos                 = L"\'";
+    static constexpr wchar_t const* backslash            = L"\\";
+    static constexpr wchar_t const* cr                   = L"\r";
+    static constexpr wchar_t const* gt                   = L">";
+    static constexpr wchar_t const* lf                   = L"\n";
+    static constexpr wchar_t const* lt                   = L"<";
+    static constexpr wchar_t const* question             = L"?";
+    static constexpr wchar_t const* quot                 = L"\"";
+    static constexpr wchar_t const* tab                  = L"\t";
+    static constexpr wchar_t const* entity_amp           = L"&amp;";
+    static constexpr wchar_t const* entity_apos          = L"&apos;";
+    static constexpr wchar_t const* entity_gt            = L"&gt;";
+    static constexpr wchar_t const* entity_lt            = L"&lt;";
+    static constexpr wchar_t const* entity_quot          = L"&quot;";
+    static constexpr wchar_t const* entity_unknown       = L"?";
+    static constexpr wchar_t const* escape_set_attribute = L"\'\"&";
+    static constexpr wchar_t const* escape_set_text      = L"&<>";
+};
+
 template <typename Char, template<typename> class Fixture>
 struct base_string_fixture
 {
@@ -141,7 +193,7 @@ struct base_string_fixture
         }
     }
 
-    static string sprintf(_Printf_format_string_ Char const* const fmt, ...)
+    static auto sprintf(_Printf_format_string_ Char const* const fmt, ...) -> string
     {
         string dst;
         va_list args;
@@ -149,6 +201,42 @@ struct base_string_fixture
         fixture::sprintf_v(dst, fmt, args);
         va_end(args);
         return dst;
+    }
+
+    static auto replace(string& str, Char const* search, Char const* replace) -> string&
+    {
+        std::size_t pos;
+        auto const replace_len = fixture::strlen(replace);
+        for (pos = str.find_first_of(search);
+             pos != string::npos;
+             pos = str.find_first_of(search, pos))
+        {
+            str.replace(pos, 1, replace);
+            pos += replace_len - 1;
+        }
+        return str;
+    }
+
+    static auto escape_xml(string& str) -> string&
+    {
+        using xml = xml<Char>;
+        std::size_t pos, n{0};
+        for (pos = str.find_first_of(xml::escape_set_text);
+            pos != string::npos;
+            pos = str.find_first_of(xml::escape_set_text, pos))
+        {
+            Char const* entity{nullptr};
+            switch (str[pos])
+            {
+            case xml::amp[0]: entity = xml::entity_amp; n = 5; break;
+            case xml::lt[0]:  entity = xml::entity_lt;  n = 4; break;
+            case xml::gt[0]:  entity = xml::entity_gt;  n = 4; break;
+            default:          entity = xml::question;   n=1;   break;
+            }
+            str.replace(pos, 1, entity);
+            pos += n - 1; // add n, remove 1.
+        }
+        return str;
     }
 };
 
@@ -317,6 +405,19 @@ inline auto random_string(std::size_t size) -> std::basic_string<Char>
 }
 
 template <typename Char>
+inline auto random_xml(std::size_t size) -> std::basic_string<Char>
+{
+    using xml = xml<Char>;
+    std::basic_string<Char> alphabet;
+    alphabet.push_back(xml::amp[0]);
+    alphabet.push_back(xml::apos[0]);
+    alphabet.push_back(xml::lt[0]);
+    alphabet.push_back(xml::gt[0]);
+    alphabet.push_back(xml::quot[0]);
+    return make_random_string(size, alphabet);
+}
+
+template <typename Char>
 struct  data_fixture : celero::TestFixture
 {
     using fixture = string_fixture<Char>;
@@ -325,6 +426,7 @@ struct  data_fixture : celero::TestFixture
     string s2;
     string si1; // case-insensitive
     string si2; // case-insensitive
+    string sxml;
 
     auto getExperimentValues() const -> std::vector<std::pair<int64_t, uint64_t>>
     {
@@ -343,6 +445,7 @@ struct  data_fixture : celero::TestFixture
         auto const size = static_cast<std::size_t>(experimentValue);
         s1 = s2 = random_string<Char>(size);
         si1 = si2 = random_istring<Char>(size);
+        sxml = random_xml<Char>(size);
     }
 };
 

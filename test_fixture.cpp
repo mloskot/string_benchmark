@@ -911,5 +911,26 @@ TEST_CASE("iends_with(string A, string B)")
 #endif
         }
     }
+}
 
+TEST_CASE("replace(string, search, replace)")
+{
+    nfixture::string s{"abcabcabc"};
+    nfixture::replace(s, "ac", "xyz");
+    REQUIRE(s == "xyzbxyzxyzbxyzxyzbxyz");
+}
+
+TEST_CASE("escape_xml(string)")
+{
+    nfixture::string s{"a&b<c>d\"e\'f"};
+    nfixture::escape_xml(s);
+    REQUIRE(s == "a&amp;b&lt;c&gt;d\"e\'f");
+}
+
+TEST_CASE("escape_xml(random string)")
+{
+    nfixture::string const xml{string_benchmark::random_xml<char>(10)};
+    nfixture::string escaped{xml};
+    nfixture::escape_xml(escaped);
+    REQUIRE(escaped.size() > xml.size());
 }

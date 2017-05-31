@@ -97,7 +97,8 @@ set(benchmarks
   benchmark_starts_with
   benchmark_ends_with
   benchmark_istarts_with
-  benchmark_iends_with)
+  benchmark_iends_with
+  benchmark_escape_xml)
 
 foreach(benchmark ${benchmarks})
   set(btarget ${benchmark}) # benchmark char-based strings

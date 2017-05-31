@@ -50,3 +50,15 @@ inline constexpr void ignore_unused(T const&) {}
         string_benchmark::data_fixture<STRING_CHAR_TYPE>, \
         (string_benchmark::config::samples), \
         (string_benchmark::config::iterations))
+
+#define STRING_BASELINE_SI(group_name, benchmark_name, samples, iterations) \
+    BASELINE_F(GROUP_NAME(group_name), benchmark_name, \
+        string_benchmark::data_fixture<STRING_CHAR_TYPE>, \
+        (samples), \
+        (iterations))
+
+#define STRING_BENCHMARK_SI(group_name, benchmark_name, samples, iterations) \
+    BENCHMARK_F(GROUP_NAME(group_name), benchmark_name, \
+        string_benchmark::data_fixture<STRING_CHAR_TYPE>, \
+        (samples), \
+        (iterations))
