@@ -12,6 +12,7 @@
 #include <strings.h> // strncasecmp
 #include <wchar.h>   // wcsncasecmp
 #endif
+#include <sstream>
 #include <string>
 #include "benchmark.hpp"
 
@@ -248,6 +249,26 @@ struct string_fixture<char> : public base_string_fixture<char, string_fixture>
 {
     using string = std::string;
 
+    static constexpr char const* const formatter_s()
+    {
+        return "%s";
+    }
+
+    static constexpr char const* const formatter_s10()
+    {
+        return "/%s/%s/%s/%s/%s/%s/%s/%s/%s/%s";
+    }
+
+    static constexpr char const* const sample_str_double()
+    {
+        return "3.14159265359";
+    }
+
+    static constexpr char const* const sample_str_int()
+    {
+        return "147483647";
+    }
+
     static auto samples() -> n10strings const&
     {
         return n10string_samples;
@@ -272,14 +293,13 @@ struct string_fixture<char> : public base_string_fixture<char, string_fixture>
         return std::strlen(s);
     }
 
-    static constexpr char const* const formatter_s()
+    template <typename Result>
+    static auto to_number(string const& s) -> Result
     {
-        return "%s";
-    }
-
-    static constexpr char const* const formatter_s10()
-    {
-        return "/%s/%s/%s/%s/%s/%s/%s/%s/%s/%s";
+        Result v;
+        std::istringstream iss(s);
+        iss >> v;
+        return v;
     }
 
     static int vscprintf(char const* format, va_list args) PRINTF_FORMAT(1, 0)
@@ -306,6 +326,26 @@ struct string_fixture<char> : public base_string_fixture<char, string_fixture>
 template <>
 struct string_fixture<wchar_t> : public base_string_fixture<wchar_t, string_fixture>
 {
+    static constexpr wchar_t const* const formatter_s()
+    {
+        return L"%ls";
+    }
+
+    static constexpr wchar_t const* const formatter_s10()
+    {
+        return L"/%ls/%ls/%ls/%ls/%ls/%ls/%ls/%ls/%ls/%ls";
+    }
+
+    static constexpr wchar_t const* const sample_str_double()
+    {
+        return L"3.14159265359";
+    }
+
+    static constexpr wchar_t const* const sample_str_int()
+    {
+        return L"147483647";
+    }
+
     static auto samples() -> w10strings const&
     {
         return w10string_samples;
@@ -330,14 +370,13 @@ struct string_fixture<wchar_t> : public base_string_fixture<wchar_t, string_fixt
         return std::wcslen(s);
     }
 
-    static constexpr wchar_t const* const formatter_s()
+    template <typename Result>
+    static auto to_number(string const& s) -> Result
     {
-        return L"%ls";
-    }
-
-    static constexpr wchar_t const* const formatter_s10()
-    {
-        return L"/%ls/%ls/%ls/%ls/%ls/%ls/%ls/%ls/%ls/%ls";
+        Result v;
+        std::wistringstream iss(s);
+        iss >> v;
+        return v;
     }
 
     static int vscprintf(wchar_t const* format, va_list args)
@@ -427,6 +466,8 @@ struct  data_fixture : celero::TestFixture
     string si1; // case-insensitive
     string si2; // case-insensitive
     string sxml;
+    string s_double;
+    string s_int;
 
     auto getExperimentValues() const -> std::vector<std::pair<int64_t, uint64_t>>
     {
@@ -446,6 +487,8 @@ struct  data_fixture : celero::TestFixture
         s1 = s2 = random_string<Char>(size);
         si1 = si2 = random_istring<Char>(size);
         sxml = random_xml<Char>(size);
+        s_double = fixture::sample_str_double();
+        s_int = fixture::sample_str_int();
     }
 };
 

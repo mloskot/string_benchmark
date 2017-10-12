@@ -17,7 +17,7 @@ CHECK_CXX_COMPILER_FLAG("-std=c++11" COMPILER_SUPPORTS_CXX11)
 if(COMPILER_SUPPORTS_CXX14)
   message(STATUS "C++ Standard: C++14")
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14")
-elseif(COMPILER_SUPPORTS_CXX11 OR MSVC_VERSION >= 1900)
+elseif(COMPILER_SUPPORTS_CXX11 OR MSVC_VERSION GREATER 1800)
   message(STATUS "C++ Standard: C++11")
   if(CMAKE_CXX_COMPILER_ID STREQUAL "Clang" OR CMAKE_COMPILER_IS_GNUCXX)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
@@ -94,6 +94,8 @@ add_custom_target(run_${test} ALL $<TARGET_FILE:${test}> DEPENDS ${test})
 file(GLOB headers *.hpp)
 file(GLOB sources fixture.cpp)
 set(benchmarks
+  benchmark_stod
+  benchmark_stoi
   benchmark_starts_with
   benchmark_ends_with
   benchmark_istarts_with
