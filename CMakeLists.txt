@@ -90,6 +90,21 @@ if(MSVC)
 endif()
 add_dependencies(libcelero celero)
 
+message(STATUS "Configuring fmtlib")
+ExternalProject_Add(fmt
+  PREFIX ${CMAKE_BINARY_DIR}/fmt
+  GIT_REPOSITORY https://github.com/fmtlib/fmt
+  TIMEOUT 10
+  UPDATE_COMMAND ${GIT_EXECUTABLE} pull
+  CONFIGURE_COMMAND ""
+  BUILD_COMMAND ""
+  INSTALL_COMMAND ""
+  LOG_DOWNLOAD ON)
+ExternalProject_Get_Property(fmt SOURCE_DIR)
+set(FMT_INCLUDE_DIR ${SOURCE_DIR} CACHE INTERNAL "Path to include folder for Catch")
+include_directories(${FMT_INCLUDE_DIR})
+add_definitions("-DFMT_HEADER_ONLY")
+
 set(test test_fixture)
 message(STATUS "Configuring test: ${test}")
 add_executable(${test} ${test}.cpp)
