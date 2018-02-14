@@ -31,7 +31,7 @@ namespace config
 #ifdef NDEBUG
 enum { samples = 100, iterations = 1000 };
 #else
-enum { samples = 1, iterations = 10 };
+enum { samples = 1, iterations = 1 };
 #endif
 
 }} // namespace string_benchmark::config
@@ -51,8 +51,16 @@ inline constexpr void ignore_unused(T const&) {}
         (string_benchmark::config::samples), \
         (string_benchmark::config::iterations))
 
+#ifdef _DEBUG
 #define STRING_BASELINE_SI(group_name, benchmark_name, samples, iterations) \
-    BASELINE_F(GROUP_NAME(group_name), benchmark_name, \
+    STRING_BASELINE(group_name, benchmark_name)
+
+#define STRING_BENCHMARK_SI(group_name, benchmark_name, samples, iterations) \
+    STRING_BENCHMARK(group_name, benchmark_name)
+
+#else
+#define STRING_BASELINE_SI(group_name, benchmark_name, samples, iterations) \
+    BASELINE_F(GROUP_NAME(`), benchmark_name, \
         string_benchmark::data_fixture<STRING_CHAR_TYPE>, \
         (samples), \
         (iterations))
@@ -62,3 +70,4 @@ inline constexpr void ignore_unused(T const&) {}
         string_benchmark::data_fixture<STRING_CHAR_TYPE>, \
         (samples), \
         (iterations))
+#endif
