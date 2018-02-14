@@ -20,7 +20,13 @@
       "installRoot": "${env.InstallDir}\\${name}",
       "cmakeCommandArgs": "",
       "buildCommandArgs": "/m",
-      "ctestCommandArgs": ""
+      "ctestCommandArgs": "",
+      "variables": [
+        {
+          "name": "ENABLE_RUN_BENCHMARK",
+          "value": "OFF"
+        }
+      ]
     },
     {
       "name": "x86-Release",
@@ -42,7 +48,13 @@
       "installRoot": "${env.InstallDir}\\${name}",
       "cmakeCommandArgs": "",
       "buildCommandArgs": "/m",
-      "ctestCommandArgs": ""
+      "ctestCommandArgs": "",
+      "variables": [
+        {
+          "name": "ENABLE_RUN_BENCHMARK",
+          "value": "OFF"
+        }
+      ]
     },
     {
       "name": "x64-Release",

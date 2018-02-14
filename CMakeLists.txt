@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 3.0)
 project(string_benchmark CXX)
 
+option(ENABLE_RUN_BENCHMARK "Run benchmarks after build" ON)
+
 if(NOT CMAKE_BUILD_TYPE)
   set(CMAKE_BUILD_TYPE "Release" CACHE STRING
     "Choose the type of build, options are: Debug Release RelWithDebInfo MinSizeRel."
@@ -105,13 +107,19 @@ set(benchmarks
   benchmark_iends_with
   benchmark_escape_xml)
 
+if (ENABLE_RUN_BENCHMARK)
+  set(all_option ALL)
+else()
+  set(all_option)
+endif()
+
 foreach(benchmark ${benchmarks})
   set(btarget ${benchmark}) # benchmark char-based strings
   message(STATUS "Configuring benchmark: ${btarget}")
   add_executable(${btarget} ${benchmark}.cpp ${sources} ${headers})
   add_dependencies(${btarget} libcelero)
   target_link_libraries(${btarget} libcelero ${CELERO_EXTRA_LIBS})
-  add_custom_target(run_${btarget} ALL
+  add_custom_target(run_${btarget} ${all_option}
     COMMAND ${btarget} ARGS -t ${btarget}.csv
     DEPENDS run_${test} ${btarget})
 
@@ -121,7 +129,7 @@ foreach(benchmark ${benchmarks})
   set_property(TARGET ${btarget} PROPERTY COMPILE_DEFINITIONS STRING_BENCHMARK_WCHAR=1)
   add_dependencies(${btarget} libcelero)
   target_link_libraries(${btarget} libcelero ${CELERO_EXTRA_LIBS})
-  add_custom_target(run_${btarget} ALL
+  add_custom_target(run_${btarget} ${all_option}
     COMMAND ${btarget} ARGS -t ${btarget}.csv
     DEPENDS run_${test} ${btarget})
 endforeach()
