@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 2.8)
+cmake_minimum_required(VERSION 3.0)
 project(string_benchmark CXX)
 
 if(NOT CMAKE_BUILD_TYPE)
@@ -47,14 +47,17 @@ include(ExternalProject)
 
 message(STATUS "Configuring Catch")
 ExternalProject_Add(catch
-  GIT_REPOSITORY https://github.com/philsquared/Catch.git
-  UPDATE_COMMAND ""
+  PREFIX ${CMAKE_BINARY_DIR}/catch
+  GIT_REPOSITORY https://github.com/catchorg/Catch2.git
+  TIMEOUT 10
+  UPDATE_COMMAND ${GIT_EXECUTABLE} pull
   CONFIGURE_COMMAND ""
   BUILD_COMMAND ""
   INSTALL_COMMAND ""
   LOG_DOWNLOAD ON)
 ExternalProject_Get_Property(catch SOURCE_DIR)
-include_directories(${SOURCE_DIR}/include)
+set(CATCH_INCLUDE_DIR ${SOURCE_DIR}/single_include CACHE INTERNAL "Path to include folder for Catch")
+include_directories(${CATCH_INCLUDE_DIR})
 
 message(STATUS "Configuring Celero")
 ExternalProject_Add(celero
