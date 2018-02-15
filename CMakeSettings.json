@@ -23,21 +23,35 @@
       "ctestCommandArgs": "",
       "variables": [
         {
-          "name": "ENABLE_RUN_BENCHMARK",
+          "name": "ENABLE_TESTS",
           "value": "OFF"
+        },
+        {
+          "name": "ENABLE_BENCHMARK_RUN",
+          "value": "ON"
         }
       ]
     },
     {
       "name": "x86-Release",
       "generator": "Visual Studio 15 2017",
-      "configurationType": "RelWithDebInfo",
+      "configurationType": "Release",
       "inheritEnvironments": [ "msvc_x86" ],
       "buildRoot": "${env.BuildDir}\\${name}",
       "installRoot": "${env.InstallDir}\\${name}",
       "cmakeCommandArgs": "",
       "buildCommandArgs": "/m",
-      "ctestCommandArgs": ""
+      "ctestCommandArgs": "",
+      "variables": [
+        {
+          "name": "ENABLE_TESTS",
+          "value": "OFF"
+        },
+        {
+          "name": "ENABLE_BENCHMARK_RUN",
+          "value": "ON"
+        }
+      ]
     },
     {
       "name": "x64-Debug",
@@ -51,21 +65,35 @@
       "ctestCommandArgs": "",
       "variables": [
         {
-          "name": "ENABLE_RUN_BENCHMARK",
+          "name": "ENABLE_TESTS",
           "value": "OFF"
+        },
+        {
+          "name": "ENABLE_BENCHMARK_RUN",
+          "value": "ON"
         }
       ]
     },
     {
       "name": "x64-Release",
       "generator": "Visual Studio 15 2017 Win64",
-      "configurationType": "RelWithDebInfo",
+      "configurationType": "Release",
       "inheritEnvironments": [ "msvc_x64_x64" ],
       "buildRoot": "${env.BuildDir}\\${name}",
       "installRoot": "${env.InstallDir}\\${name}",
       "cmakeCommandArgs": "",
       "buildCommandArgs": "/m",
-      "ctestCommandArgs": ""
+      "ctestCommandArgs": "",
+      "variables": [
+        {
+          "name": "ENABLE_TESTS",
+          "value": "OFF"
+        },
+        {
+          "name": "ENABLE_BENCHMARK_RUN",
+          "value": "ON"
+        }
+      ]
     }
   ]
 }

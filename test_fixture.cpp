@@ -1,8 +1,8 @@
 #define CATCH_CONFIG_MAIN  // This tells Catch to provide a main() - only do this in one cpp file
 #include <catch.hpp>
-#ifdef BENCHMARK
-#undef BENCHMARK
-#endif
+//#ifdef BENCHMARK
+//#undef BENCHMARK
+//#endif
 #include "fixture.hpp"
 #ifdef HAS_BOOST
 #include <boost/algorithm/string/predicate.hpp>

@@ -16,9 +16,11 @@
 #ifdef STRING_BENCHMARK_WCHAR
 #define STRING_CHAR_TYPE wchar_t
 #define GROUP_NAME(group_name) w ## group_name
+#define STRING_TEXT(s) L##s
 #else
 #define STRING_CHAR_TYPE char
 #define GROUP_NAME(group_name) group_name
+#define STRING_TEXT(s) s
 #endif
 
 namespace string_benchmark
@@ -60,7 +62,7 @@ inline constexpr void ignore_unused(T const&) {}
 
 #else
 #define STRING_BASELINE_SI(group_name, benchmark_name, samples, iterations) \
-    BASELINE_F(GROUP_NAME(`), benchmark_name, \
+    BASELINE_F(GROUP_NAME(group_name), benchmark_name, \
         string_benchmark::data_fixture<STRING_CHAR_TYPE>, \
         (samples), \
         (iterations))

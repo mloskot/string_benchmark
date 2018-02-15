@@ -269,6 +269,11 @@ struct string_fixture<char> : public base_string_fixture<char, string_fixture>
         return "147483647";
     }
 
+    static constexpr char const* const fmt_formatter()
+    {
+        return "This is float-point value {:.5f} and this is integer {} and this is string {}";
+    }
+
     static auto samples() -> n10strings const&
     {
         return n10string_samples;
@@ -468,6 +473,22 @@ struct  data_fixture : celero::TestFixture
     string sxml;
     string s_double;
     string s_int;
+    string buffer32_;
+    string buffer256_;
+    string buffer512_;
+    string buffer1024_;
+    string format32_;
+    string format256_;
+    string format512_;
+    string format1024_;
+
+    data_fixture()
+    {
+        buffer32_.reserve(32);
+        buffer256_.reserve(256);
+        buffer512_.reserve(512);
+        buffer1024_.reserve(1024);
+    }
 
     auto getExperimentValues() const -> std::vector<std::pair<int64_t, uint64_t>>
     {
