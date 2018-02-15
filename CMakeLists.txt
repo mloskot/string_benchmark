@@ -102,7 +102,7 @@ ExternalProject_Add(fmt
   LOG_DOWNLOAD ON)
 ExternalProject_Get_Property(fmt SOURCE_DIR)
 set(FMT_INCLUDE_DIR ${SOURCE_DIR} CACHE INTERNAL "Path to include folder for Catch")
-include_directories(${FMT_INCLUDE_DIR})
+include_directories(${FMT_INCLUDE_DIR}/include)
 add_definitions("-DFMT_HEADER_ONLY")
 
 set(test test_fixture)
@@ -114,6 +114,7 @@ add_custom_target(run_${test} ALL $<TARGET_FILE:${test}> DEPENDS ${test})
 file(GLOB headers *.hpp)
 file(GLOB sources fixture.cpp)
 set(benchmarks
+  benchmark_fmtlib
   benchmark_stod
   benchmark_stoi
   benchmark_starts_with
