@@ -23,12 +23,12 @@
       "ctestCommandArgs": "",
       "variables": [
         {
-          "name": "ENABLE_TESTS",
+          "name": "ENABLE_BENCHMARK_TESTS",
           "value": "OFF"
         },
         {
           "name": "ENABLE_BENCHMARK_RUN",
-          "value": "ON"
+          "value": "OFF"
         }
       ]
     },
@@ -44,7 +44,7 @@
       "ctestCommandArgs": "",
       "variables": [
         {
-          "name": "ENABLE_TESTS",
+          "name": "ENABLE_BENCHMARK_TESTS",
           "value": "OFF"
         },
         {
@@ -65,7 +65,7 @@
       "ctestCommandArgs": "",
       "variables": [
         {
-          "name": "ENABLE_TESTS",
+          "name": "ENABLE_BENCHMARK_TESTS",
           "value": "OFF"
         },
         {
@@ -86,7 +86,7 @@
       "ctestCommandArgs": "",
       "variables": [
         {
-          "name": "ENABLE_TESTS",
+          "name": "ENABLE_BENCHMARK_TESTS",
           "value": "OFF"
         },
         {
