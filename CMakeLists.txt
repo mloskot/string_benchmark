@@ -41,18 +41,14 @@ if(MSVC)
   add_definitions("-DNOMINMAX")
 endif()
 
-find_package(Boost 1.54.0)
-if(Boost_FOUND)
+find_package(Boost 1.72.0 REQUIRED)
   include_directories(${Boost_INCLUDE_DIRS})
   add_definitions("-DHAS_BOOST")
-endif()
 message(STATUS "Boost_FOUND=${Boost_FOUND}")
 message(STATUS "Boost_INCLUDE_DIRS=${Boost_INCLUDE_DIRS}")
 
 find_package(Git REQUIRED)
 include(ExternalProject)
-
-message(STATUS "X ${CMAKE_BINARY_DIR}")
 
 message(STATUS "Configuring Celero")
 ExternalProject_Add(celero_project

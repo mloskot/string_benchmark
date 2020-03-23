@@ -4,7 +4,10 @@
     { "InstallDir": "${workspaceRoot}\\_install" },
     { "DEFAULT_BUILD_TESTING": "OFF" },
     { "DEFAULT_ENABLE_BENCHMARK_TESTS": "OFF" },
-    { "DEFAULT_ENABLE_BENCHMARK_RUN": "OFF" }
+    { "DEFAULT_ENABLE_BENCHMARK_RUN": "OFF" },
+    { "DEFAULT_BOOST_ROOT": "D:\\boost.win" },
+    { "DEFAULT_Boost_ADDITIONAL_VERSIONS": "1.72;1.73" },
+    { "DEFAULT_Boost_DEBUG": "ON" }
   ],
   "configurations": [
     {
@@ -17,8 +20,10 @@
       "cmakeCommandArgs": "",
       "ctestCommandArgs": "",
       "variables": [
+        { "name": "BOOST_ROOT", "value": "${env.DEFAULT_BOOST_ROOT}"},
+        { "name": "Boost_ADDITIONAL_VERSIONS", "value": "${env.DEFAULT_Boost_ADDITIONAL_VERSIONS}" },
+        { "name": "Boost_DEBUG", "value": "${env.DEFAULT_Boost_DEBUG}" },
         { "name": "BUILD_TESTING", "value": "${env.DEFAULT_BUILD_TESTING}"},
-        { "name": "ENABLE_BENCHMARK_TESTS", "value": "${env.DEFAULT_ENABLE_BENCHMARK_TESTS}" },
         { "name": "ENABLE_BENCHMARK_RUN", "value": "${env.DEFAULT_ENABLE_BENCHMARK_RUN}" }
       ]
     },
@@ -32,6 +37,9 @@
       "cmakeCommandArgs": "",
       "ctestCommandArgs": "",
       "variables": [
+        { "name": "BOOST_ROOT", "value": "${env.DEFAULT_BOOST_ROOT}"},
+        { "name": "Boost_ADDITIONAL_VERSIONS", "value": "${env.DEFAULT_Boost_ADDITIONAL_VERSIONS}" },
+        { "name": "Boost_DEBUG", "value": "${env.DEFAULT_Boost_DEBUG}" },
         { "name": "BUILD_TESTING", "value": "${env.DEFAULT_BUILD_TESTING}"},
         { "name": "ENABLE_BENCHMARK_RUN", "value": "${env.DEFAULT_ENABLE_BENCHMARK_RUN}" }
       ]
@@ -46,8 +54,10 @@
       "cmakeCommandArgs": "",
       "ctestCommandArgs": "",
       "variables": [
+        { "name": "BOOST_ROOT", "value": "${env.DEFAULT_BOOST_ROOT}"},
+        { "name": "Boost_ADDITIONAL_VERSIONS", "value": "${env.DEFAULT_Boost_ADDITIONAL_VERSIONS}" },
+        { "name": "Boost_DEBUG", "value": "${env.DEFAULT_Boost_DEBUG}" },
         { "name": "BUILD_TESTING", "value": "${env.DEFAULT_BUILD_TESTING}"},
-        { "name": "ENABLE_BENCHMARK_TESTS", "value": "${env.DEFAULT_ENABLE_BENCHMARK_TESTS}" },
         { "name": "ENABLE_BENCHMARK_RUN", "value": "${env.DEFAULT_ENABLE_BENCHMARK_RUN}" }
       ]
     },
@@ -61,8 +71,10 @@
       "cmakeCommandArgs": "",
       "ctestCommandArgs": "",
       "variables": [
+        { "name": "BOOST_ROOT", "value": "${env.DEFAULT_BOOST_ROOT}"},
+        { "name": "Boost_ADDITIONAL_VERSIONS", "value": "${env.DEFAULT_Boost_ADDITIONAL_VERSIONS}" },
+        { "name": "Boost_DEBUG", "value": "${env.DEFAULT_Boost_DEBUG}" },
         { "name": "BUILD_TESTING", "value": "${env.DEFAULT_BUILD_TESTING}"},
-        { "name": "ENABLE_BENCHMARK_TESTS", "value": "${env.DEFAULT_ENABLE_BENCHMARK_TESTS}" },
         { "name": "ENABLE_BENCHMARK_RUN", "value": "${env.DEFAULT_ENABLE_BENCHMARK_RUN}" }
       ]
     }
