@@ -1,8 +1,6 @@
 #define CELERO_STATIC
-#include <cstdint>
-#include <algorithm>
-#include <iostream>
-#include <random>
+#include <cstdlib>
+#include <string>
 #include <vector>
 #include <boost/geometry.hpp>
 #include <boost/lexical_cast.hpp>
@@ -25,8 +23,6 @@ struct Fixture : celero::TestFixture
         v.emplace_back(256, 0);
         v.emplace_back(512, 0);
         v.emplace_back(1024, 0);
-        v.emplace_back(2048, 0);
-        v.emplace_back(1024 * 10, 0);
         return v;
     }
 
@@ -39,9 +35,9 @@ struct Fixture : celero::TestFixture
             srand(unsigned(i * time(NULL)));
             boost::geometry::append(this->multi_point_,
                 boost::geometry::make<point_t>(
-                    (double)rand() / (RAND_MAX),
-                    (double)rand() / (RAND_MAX)));
-            this->coordinates_.push_back((double)rand() / (RAND_MAX));
+                    (double)std::rand() / (RAND_MAX),
+                    (double)std::rand() / (RAND_MAX)));
+            this->coordinates_.push_back((double)std::rand() / (RAND_MAX));
         }
     }
 
