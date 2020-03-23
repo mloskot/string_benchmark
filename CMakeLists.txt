@@ -2,7 +2,8 @@ cmake_minimum_required(VERSION 3.0)
 project(string_benchmark CXX)
 
 option(ENABLE_BENCHMARK_RUN "Run benchmarks after successful build" ON)
-option(ENABLE_BENCHMARK_TESTS "Build benchmark tests and run before benchmarks" OFF)
+
+include(CTest)
 
 if(NOT CMAKE_BUILD_TYPE)
   set(CMAKE_BUILD_TYPE "Release" CACHE STRING
@@ -103,8 +104,8 @@ message(STATUS "FMT_INCLUDE_DIR=${FMT_INCLUDE_DIR}")
 include_directories(${FMT_INCLUDE_DIR})
 add_definitions("-DFMT_HEADER_ONLY")
 
-message(STATUS "Configuring tests - ${ENABLE_BENCHMARK_TESTS}")
-if (ENABLE_TESTS)
+message(STATUS "Configuring tests - ${BUILD_TESTING}")
+if (BUILD_TESTING)
   message(STATUS "Configuring Catch")
   ExternalProject_Add(catch
     PREFIX ${CMAKE_BINARY_DIR}/catch
@@ -120,8 +121,6 @@ if (ENABLE_TESTS)
   set(CATCH_INCLUDE_DIR ${SOURCE_DIR}/single_include CACHE INTERNAL "Path to include folder for Catch")
   message(STATUS "CATCH_INCLUDE_DIR=${CATCH_INCLUDE_DIR}")
   include_directories(${CATCH_INCLUDE_DIR})
-
-  enable_testing()
 
   set(tests test_fixture)
   foreach(test ${tests})
