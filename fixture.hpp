@@ -490,21 +490,24 @@ struct  data_fixture : celero::TestFixture
         buffer1024_.reserve(1024);
     }
 
-    auto getExperimentValues() const -> std::vector<std::pair<int64_t, uint64_t>>
+    auto getExperimentValues() const -> std::vector<celero::TestFixture::ExperimentValue>
     {
-        std::vector<std::pair<int64_t, uint64_t>> v;
+        std::vector<celero::TestFixture::ExperimentValue> v;
         v.emplace_back(0, 0);
         std::int64_t n{0};
         std::generate_n(std::back_inserter(v), 10,
-            [&n]() -> std::pair<int64_t, uint64_t> { return {n += 10, 0}; });
+            [&n]() -> celero::TestFixture::ExperimentValue {
+                n += 10;
+                return {n, 0};
+        });
         v.emplace_back(512, 0);
         v.emplace_back(1024, 0);
         return v;
     }
 
-    void setUp(int64_t experimentValue) final
+    void setUp(const celero::TestFixture::ExperimentValue& experimentValue) final
     {
-        auto const size = static_cast<std::size_t>(experimentValue);
+        auto const size = static_cast<std::size_t>(experimentValue.Value);
         s1 = s2 = random_string<Char>(size);
         si1 = si2 = random_istring<Char>(size);
         sxml = random_xml<Char>(size);

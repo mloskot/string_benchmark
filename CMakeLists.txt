@@ -51,10 +51,12 @@ message(STATUS "Boost_INCLUDE_DIRS=${Boost_INCLUDE_DIRS}")
 find_package(Git REQUIRED)
 include(ExternalProject)
 
+message(STATUS "X ${CMAKE_BINARY_DIR}")
+
 message(STATUS "Configuring Celero")
 ExternalProject_Add(celero_project
   GIT_REPOSITORY https://github.com/DigitalInBlue/Celero.git
-  GIT_TAG "v2.1.1"
+  GIT_TAG "v2.6.0"
   GIT_SHALLOW 1
   UPDATE_COMMAND ""
   INSTALL_DIR ${CMAKE_BINARY_DIR}
@@ -73,10 +75,10 @@ include_directories(${CELERO_INSTALL_DIR}/include)
 add_library(libcelero STATIC IMPORTED GLOBAL)
 set_property(TARGET libcelero PROPERTY
   IMPORTED_LOCATION_DEBUG
-  "${CELERO_INSTALL_DIR}/lib/${CMAKE_STATIC_LIBRARY_PREFIX}celerod${CMAKE_STATIC_LIBRARY_SUFFIX}")
+  "${CELERO_INSTALL_DIR}/lib/static/${CMAKE_STATIC_LIBRARY_PREFIX}celerod${CMAKE_STATIC_LIBRARY_SUFFIX}")
 set_property(TARGET libcelero PROPERTY
   IMPORTED_LOCATION_RELEASE
-  "${CELERO_INSTALL_DIR}/lib/${CMAKE_STATIC_LIBRARY_PREFIX}celero${CMAKE_STATIC_LIBRARY_SUFFIX}")
+  "${CELERO_INSTALL_DIR}/lib/static/${CMAKE_STATIC_LIBRARY_PREFIX}celero${CMAKE_STATIC_LIBRARY_SUFFIX}")
 add_dependencies(libcelero celero_project)
 
 if(MSVC)
@@ -142,7 +144,8 @@ set(benchmarks
   benchmark_istarts_with
   benchmark_iends_with
   benchmark_escape_xml
-  benchmark_fmtlib)
+  benchmark_fmtlib
+  benchmark_boost_geometry_wkt)
 
 message(STATUS "Configuring benchmarks run - ${ENABLE_BENCHMARK_RUN}")
 if (ENABLE_BENCHMARK_RUN)
