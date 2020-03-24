@@ -54,7 +54,7 @@ struct Fixture : celero::TestFixture
 
 CELERO_MAIN
 
-BASELINE_F(wkt, to_string, Fixture, (string_benchmark::config::samples), (string_benchmark::config::iterations))
+BASELINE_F(wkt, to_string, Fixture, 0, 100)
 {
     for (auto const& p : this->points_)
     {
@@ -63,7 +63,7 @@ BASELINE_F(wkt, to_string, Fixture, (string_benchmark::config::samples), (string
     }
 }
 
-BENCHMARK_F(wkt, stringstream, Fixture, (string_benchmark::config::samples), (string_benchmark::config::iterations))
+BENCHMARK_F(wkt, stringstream, Fixture, 0, 100)
 {
     std::ostringstream oss;
     for (auto const& p : this->points_)
@@ -73,7 +73,7 @@ BENCHMARK_F(wkt, stringstream, Fixture, (string_benchmark::config::samples), (st
     }
 }
 
-BENCHMARK_F(wkt, lexical_cast, Fixture, (string_benchmark::config::samples), (string_benchmark::config::iterations))
+BENCHMARK_F(wkt, lexical_cast, Fixture, 0, 100)
 {
     std::ostringstream oss;
     for (auto const& p : this->points_)
@@ -83,14 +83,20 @@ BENCHMARK_F(wkt, lexical_cast, Fixture, (string_benchmark::config::samples), (st
     }
 }
 
-BENCHMARK_F(wkt, geometry_wkt, Fixture, (string_benchmark::config::samples), (string_benchmark::config::iterations))
+BENCHMARK_F(wkt, wkt, Fixture, 0, 100)
 {
     std::ostringstream oss;
     celero::DoNotOptimizeAway(oss << boost::geometry::wkt(this->multi_point_));
+    celero::DoNotOptimizeAway(oss.str());
 }
 
 #ifdef BOOST_GEOMETRY_PR670
-BENCHMARK_F(wkt, geometry_to_wkt, Fixture, (string_benchmark::config::samples), (string_benchmark::config::iterations))
+BENCHMARK_F(wkt, to_wkt, Fixture, 0, 100)
+{
+    celero::DoNotOptimizeAway(boost::geometry::to_wkt(this->multi_point_));
+}
+
+BENCHMARK_F(wkt, to_wkt_6digits, Fixture, 0, 100)
 {
     celero::DoNotOptimizeAway(boost::geometry::to_wkt(this->multi_point_));
 }
