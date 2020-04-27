@@ -138,6 +138,6 @@ BENCHMARK_F(wkt, to_wkt, Fixture, bg_samples, bg_iterations)
 
 BENCHMARK_F(wkt, to_wkt_6dig, Fixture, bg_samples, bg_iterations)
 {
-    celero::DoNotOptimizeAway(boost::geometry::to_wkt(this->multi_point_));
+    celero::DoNotOptimizeAway(boost::geometry::to_wkt(this->multi_point_, 6));
 }
 #endif
