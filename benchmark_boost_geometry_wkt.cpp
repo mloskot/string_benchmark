@@ -1,4 +1,5 @@
 #define CELERO_STATIC
+#include <cmath>
 #include <random>
 #include <sstream>
 #include <string>
@@ -8,8 +9,32 @@
 #include <celero/Celero.h>
 #include "benchmark.hpp"
 
+#ifdef NDEBUG
+enum { bg_samples = 30, bg_iterations = 0 };
+#else
+enum { bg_samples = 1, bg_iterations = 1 };
+#endif
+
 // Uncomment to enable boost::geometry::to_wkt from https://github.com/boostorg/geometry/pull/670
 #define BOOST_GEOMETRY_PR670
+
+namespace boost { namespace geometry {
+template <typename Geometry>
+inline std::string to_wkt_wrapper(Geometry const& geometry)
+{
+    std::stringstream ss;
+    ss << boost::geometry::wkt(geometry);
+    return ss.str();
+}
+template <typename Geometry>
+inline std::string to_wkt_wrapper(Geometry const& geometry, int significant_digits)
+{
+    std::stringstream ss;
+    ss.precision(significant_digits);
+    ss << boost::geometry::wkt(geometry);
+    return ss.str();
+}
+}}
 
 struct Fixture : celero::TestFixture
 {
@@ -19,12 +44,13 @@ struct Fixture : celero::TestFixture
 
     std::vector<celero::TestFixture::ExperimentValue> getExperimentValues() const override
     {
+        std::uint64_t const total_tests = 4;
         // Problem space as number of points (pairs of X/Y)
         std::vector<celero::TestFixture::ExperimentValue> v;
-        v.emplace_back(1, 0);
-        v.emplace_back(256, 0);
-        v.emplace_back(512, 0);
-        v.emplace_back(1024, 0);
+        v.emplace_back(1, uint64_t(std::pow(2, 0)));
+        v.emplace_back(256, uint64_t(std::pow(2, total_tests - 0)));
+        v.emplace_back(512, uint64_t(std::pow(2, total_tests - 1)));
+        v.emplace_back(1024, uint64_t(std::pow(2, total_tests - 2)));
         return v;
     }
 
@@ -55,7 +81,7 @@ struct Fixture : celero::TestFixture
 
 CELERO_MAIN
 
-BASELINE_F(wkt, to_string, Fixture, 0, 100)
+BASELINE_F(wkt, to_string, Fixture, bg_samples, bg_iterations)
 {
     for (auto const& p : this->points_)
     {
@@ -64,7 +90,7 @@ BASELINE_F(wkt, to_string, Fixture, 0, 100)
     }
 }
 
-BENCHMARK_F(wkt, stringstream, Fixture, 0, 100)
+BENCHMARK_F(wkt, stringstream, Fixture, bg_samples, bg_iterations)
 {
     std::ostringstream oss;
     for (auto const& p : this->points_)
@@ -75,7 +101,7 @@ BENCHMARK_F(wkt, stringstream, Fixture, 0, 100)
     celero::DoNotOptimizeAway(oss.str());
 }
 
-BENCHMARK_F(wkt, lexical_cast, Fixture, 0, 100)
+BENCHMARK_F(wkt, lexical_cast, Fixture, bg_samples, bg_iterations)
 {
     std::ostringstream oss;
     for (auto const& p : this->points_)
@@ -86,20 +112,31 @@ BENCHMARK_F(wkt, lexical_cast, Fixture, 0, 100)
     celero::DoNotOptimizeAway(oss.str());
 }
 
-BENCHMARK_F(wkt, wkt, Fixture, 0, 100)
+BENCHMARK_F(wkt, wkt, Fixture, bg_samples, bg_iterations)
 {
     std::ostringstream oss;
     celero::DoNotOptimizeAway(oss << boost::geometry::wkt(this->multi_point_));
     celero::DoNotOptimizeAway(oss.str());
 }
 
+BENCHMARK_F(wkt, to_wkt_wrap, Fixture, bg_samples, bg_iterations)
+{
+    celero::DoNotOptimizeAway(boost::geometry::to_wkt_wrapper(this->multi_point_));
+}
+
+BENCHMARK_F(wkt, to_wkt_wrap_6dig, Fixture, bg_samples, bg_iterations)
+{
+    celero::DoNotOptimizeAway(boost::geometry::to_wkt_wrapper(this->multi_point_, 6));
+}
+
+
 #ifdef BOOST_GEOMETRY_PR670
-BENCHMARK_F(wkt, to_wkt, Fixture, 0, 100)
+BENCHMARK_F(wkt, to_wkt, Fixture, bg_samples, bg_iterations)
 {
     celero::DoNotOptimizeAway(boost::geometry::to_wkt(this->multi_point_));
 }
 
-BENCHMARK_F(wkt, to_wkt_6digits, Fixture, 0, 100)
+BENCHMARK_F(wkt, to_wkt_6dig, Fixture, bg_samples, bg_iterations)
 {
     celero::DoNotOptimizeAway(boost::geometry::to_wkt(this->multi_point_));
 }
