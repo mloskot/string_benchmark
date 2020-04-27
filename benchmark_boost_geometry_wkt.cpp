@@ -124,9 +124,14 @@ BENCHMARK_F(wkt, to_wkt_wrap, Fixture, bg_samples, bg_iterations)
     celero::DoNotOptimizeAway(boost::geometry::to_wkt_wrapper(this->multi_point_));
 }
 
-BENCHMARK_F(wkt, to_wkt_wrap_6dig, Fixture, bg_samples, bg_iterations)
+BENCHMARK_F(wkt, to_wkt_wrap_3dig, Fixture, bg_samples, bg_iterations)
 {
-    celero::DoNotOptimizeAway(boost::geometry::to_wkt_wrapper(this->multi_point_, 6));
+    celero::DoNotOptimizeAway(boost::geometry::to_wkt_wrapper(this->multi_point_, 3));
+}
+
+BENCHMARK_F(wkt, to_wkt_wrap_9dig, Fixture, bg_samples, bg_iterations)
+{
+    celero::DoNotOptimizeAway(boost::geometry::to_wkt_wrapper(this->multi_point_, 9));
 }
 
 
@@ -136,8 +141,13 @@ BENCHMARK_F(wkt, to_wkt, Fixture, bg_samples, bg_iterations)
     celero::DoNotOptimizeAway(boost::geometry::to_wkt(this->multi_point_));
 }
 
-BENCHMARK_F(wkt, to_wkt_6dig, Fixture, bg_samples, bg_iterations)
+BENCHMARK_F(wkt, to_wkt_3dig, Fixture, bg_samples, bg_iterations)
 {
-    celero::DoNotOptimizeAway(boost::geometry::to_wkt(this->multi_point_, 6));
+    celero::DoNotOptimizeAway(boost::geometry::to_wkt(this->multi_point_, 3));
+}
+
+BENCHMARK_F(wkt, to_wkt_9dig, Fixture, bg_samples, bg_iterations)
+{
+    celero::DoNotOptimizeAway(boost::geometry::to_wkt(this->multi_point_, 9));
 }
 #endif
