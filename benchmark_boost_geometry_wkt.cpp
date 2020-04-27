@@ -1,5 +1,6 @@
 #define CELERO_STATIC
 #include <random>
+#include <sstream>
 #include <string>
 #include <vector>
 #include <boost/geometry.hpp>
@@ -71,6 +72,7 @@ BENCHMARK_F(wkt, stringstream, Fixture, 0, 100)
         celero::DoNotOptimizeAway(oss << p.x());
         celero::DoNotOptimizeAway(oss << p.y());
     }
+    celero::DoNotOptimizeAway(oss.str());
 }
 
 BENCHMARK_F(wkt, lexical_cast, Fixture, 0, 100)
@@ -81,6 +83,7 @@ BENCHMARK_F(wkt, lexical_cast, Fixture, 0, 100)
         celero::DoNotOptimizeAway(boost::lexical_cast<std::string>(p.x()));
         celero::DoNotOptimizeAway(boost::lexical_cast<std::string>(p.y()));
     }
+    celero::DoNotOptimizeAway(oss.str());
 }
 
 BENCHMARK_F(wkt, wkt, Fixture, 0, 100)
